@@ -47,7 +47,8 @@ public class Vector extends Point{
     }
 
     /**
-     * Addition between 2 vectors
+     * Addition between 2 vectors where each coordinate of the first vector
+     * is added with the same coordinate of the second vector
      * @param vector that is the vector of the operation: vector1 + vector
      * @return new vector
      */
