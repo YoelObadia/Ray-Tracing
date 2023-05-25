@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Class PointTest: we will check all the calculation functions of the class Point
+ * Testing Point
  */
 class PointTest {
 
