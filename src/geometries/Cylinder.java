@@ -1,6 +1,7 @@
 package geometries;
 
 import primitives.Point;
+import primitives.Ray;
 import primitives.Vector;
 
 public class Cylinder extends Tube implements Geometry{
@@ -8,13 +9,14 @@ public class Cylinder extends Tube implements Geometry{
     /**
      * Field height
      */
-    private double height;
+    private final double height;
 
     /**
-     * Constructor of Cylinder with 1 parameter
+     * Constructor of Cylinder with 1 parameter and super from Tube
      * @param height that is the length of the cylinder
      */
-    public Cylinder(double height) {
+    public Cylinder(Ray axisRay, double radius, double height) {
+        super(axisRay, radius);
         this.height = height;
     }
 

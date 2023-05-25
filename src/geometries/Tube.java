@@ -4,6 +4,9 @@ import primitives.Point;
 import primitives.Ray;
 import primitives.Vector;
 
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
+
 /**
  * Class Tube: geometry of the project
  */
@@ -12,7 +15,38 @@ public class Tube implements Geometry{
     /**
      * Field axisRay that is the ray of the tube
      */
-    protected Ray axisRay;
+    protected final Ray axisRay;
+
+    /**
+     * Field radius that is the length from the center
+     */
+    protected final double radius;
+
+    /**
+     * Constructor of Tube with 2 parameters
+     * @param axisRay ray of the tube
+     * @param radius radius of the tube
+     */
+    public Tube(Ray axisRay, double radius) {
+        this.axisRay = axisRay;
+        this.radius = radius;
+    }
+
+    /**
+     * Getter for the field axisRay
+     * @return axisRay of the tube
+     */
+    public Ray getAxisRay() {
+        return axisRay;
+    }
+
+    /**
+     * Getter for the field radius
+     * @return radius of the tube
+     */
+    public double getRadius() {
+        return radius;
+    }
 
     /**
      * Use of the function getNormal of the interface Geometry
@@ -22,13 +56,5 @@ public class Tube implements Geometry{
     @Override
     public Vector getNormal(Point point) {
         return null;
-    }
-
-    /**
-     * Getter for the field axisRay
-     * @return axisRay of the tube
-     */
-    public Ray getAxisRay() {
-        return axisRay;
     }
 }
