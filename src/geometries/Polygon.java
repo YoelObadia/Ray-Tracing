@@ -1,11 +1,8 @@
 package geometries;
 
-import static primitives.Util.isZero;
-
+import primitives.*;
+import static primitives.Util.*;
 import java.util.List;
-
-import primitives.Point;
-import primitives.Vector;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -86,8 +83,77 @@ public class Polygon implements Geometry {
         }
     }
 
+    /**
+     * Use of the function getNormal of the interface Geometry
+     *
+     * @param point that is the point on the geometry
+     * @return vector normal
+     */
     @Override
     public Vector getNormal(Point point) {
         return plane.getNormal();
+    }
+
+    /**
+     * Use of the function findIntersections from the interface intersectable
+     * @param ray that allow us to know if there are intersections
+     * @return list of intersections points
+     */
+    @Override
+    public List<Point> findIntsersections(Ray ray) {
+
+        // First ,we check if the plane of our polygon intersects with the ray,
+        // if there's no intersection with the
+        // plane so there's no intersection with the polygon.
+
+        // N=_normal of the plane
+        // P0=_q0 of the plane
+        // R0=_p0 of the ray
+        // d is the vector offset from the origin
+        // V is _dir of the ray
+
+
+        // If there's intersection with the plane,
+        // so we have to substitute the ray equation into the plane equation
+        // (replacing P) to get: (P0 + tV) . N + d = 0 and find the value of t:
+        // t = -(P0 . N + d) / (V . N)
+        // Then you substitute that value of t back into your ray equation to get the value of P:
+        // R0 + tV = P.
+        // Finally, you want to go around each adjacent pair of points
+        // in the polygon checking that P is inside.
+        // The polygon, which is done by checking that P is
+        // to the same side of each line made by the points.
+
+        List<Point> intersections = plane.findIntsersections(ray);
+
+        if (intersections == null)
+            return null;
+
+        Point p0 = ray.getP0();
+        Vector v = ray.getDir();
+
+        Vector v1 = vertices.get(1).subtract(p0);
+        Vector v2 = vertices.get(0).subtract(p0);
+
+        double sign = v.dotProduct(v1.crossProduct(v2));
+
+        if (isZero(sign))
+            return null;
+
+        boolean positive = sign > 0;
+
+        for (int i = vertices.size() - 1; i > 0; --i) {
+            v1 = v2;
+            v2 = vertices.get(i).subtract(p0);
+            sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+
+            if (isZero(sign))
+                return null;
+
+            if (positive != (sign > 0))
+                return null;
+        }
+
+        return intersections;
     }
 }

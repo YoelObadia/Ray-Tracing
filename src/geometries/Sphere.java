@@ -1,7 +1,8 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
+import java.util.List;
+import static primitives.Util.*;
 
 /**
  * Class sphere
@@ -53,5 +54,54 @@ public class Sphere extends RadialGeometry implements Geometry{
     public Vector getNormal(Point point) {
         // n = normalize(P - 0)
         return (point.subtract(getCenter())).normalize();
+    }
+
+    /**
+     * Use of the function findIntersections from the interface intersectable
+     * @param ray that allow us to know if there are intersections
+     * @return list of intersections points
+     */
+    @Override
+    public List<Point> findIntsersections(Ray ray) {
+
+        Vector u = center.subtract(ray.getP0());
+        double tm = alignZero(u.dotProduct(ray.getDir()));
+        double d = alignZero(Math.sqrt(u.lengthSquared() - (tm * tm)));
+
+        // No intersections
+        if (d >= radius)
+            return null;
+
+        double th = alignZero(Math.sqrt(radius * radius - d * d));
+        double t1 = tm - th;
+        double t2 = tm + th;
+
+        // We have to check the order of the intersections because
+        // there is the possibility of 2 intersections points
+
+        // No intersections
+        if(t1 <= 0 && t2 <= 0)
+            return null;
+
+        // 2 intersections
+        if(t1 > 0 && t2 > 0) {
+            Point p1 = ray.getPoint(t1);
+            Point p2 = ray.getPoint(t2);
+            return List.of(p1, p2);
+        }
+
+        // 1 intersection
+        if (t1 > 0) {
+            Point p1 = ray.getPoint(t1);
+            return List.of(p1);
+        }
+
+        // 1 intersection
+        if (t2 > 0) {
+            Point p2 = ray.getPoint(t2);
+            return List.of(p2);
+        }
+
+        return null;
     }
 }

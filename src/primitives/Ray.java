@@ -2,6 +2,8 @@ package primitives;
 
 import java.util.Objects;
 
+import static primitives.Util.*;
+
 /**
  * This class will serve to use
  */
@@ -62,5 +64,18 @@ public class Ray {
      */
     public Vector getDir() {
         return dir;
+    }
+
+    /**
+     * Refactoring for the calculation code of a point on a ray
+     * @param t distance from ray head
+     * @return the point
+     */
+    public Point getPoint(double t) {
+        if (t == 0)
+            return p0;
+        else {
+            return (p0).add(dir.scale(t));
+        }
     }
 }
