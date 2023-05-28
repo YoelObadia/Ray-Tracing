@@ -1,5 +1,6 @@
 package primitives;
 
+import java.util.List;
 import java.util.Objects;
 
 import static primitives.Util.*;
@@ -77,5 +78,36 @@ public class Ray {
         else {
             return (p0).add(dir.scale(t));
         }
+    }
+
+    /**
+     * Function that calculate the minimal distance between
+     * head of a ray and a list of intersection points
+     * @param points list
+     * @return the closest point of the head of the ray
+     */
+    public Point findClosestPoint(List<Point> points) {
+
+        // There are no points
+        if(points == null)
+            return null;
+
+        // We'll every time compare if the distance with the point is lower than the precedent distance.
+        // For this, we need to begin by the maximal value.
+        double maxDistance = Double.MAX_VALUE;
+        double minDistance;
+
+        // Initialisation of the point that we'll return
+        Point closestPoint = new Point(0, 0, 0);
+
+        for (Point point: points) {
+            if(point.distance(p0) < maxDistance) {
+                minDistance = point.distance(p0);
+                maxDistance = minDistance;
+                closestPoint = point;
+            }
+        }
+
+        return closestPoint;
     }
 }

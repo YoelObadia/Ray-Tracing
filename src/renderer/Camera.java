@@ -2,6 +2,8 @@ package renderer;
 
 import primitives.*;
 
+import java.util.MissingResourceException;
+
 public class Camera {
 
     /**
@@ -38,6 +40,16 @@ public class Camera {
      * Distance from the View PLane
      */
     private double distance;
+
+    /**
+     * Field of ImageWriter type
+     */
+    private ImageWriter imageWriter;
+
+    /**
+     * Field of RayTracerBase type
+     */
+    private RayTracerBase rayTracer;
 
     public Point getP0() {
         return p0;
@@ -111,6 +123,26 @@ public class Camera {
     }
 
     /**
+     * Setter for renderTest
+     * @param imageWriter field
+     * @return imageWriter
+     */
+    public Camera setImageWriter(ImageWriter imageWriter) {
+        this.imageWriter = imageWriter;
+        return this;
+    }
+
+    /**
+     * Setter for renderTest
+     * @param rayTracer field
+     * @return rayTracer
+     */
+    public Camera setRayTracer(RayTracerBase rayTracer) {
+        this.rayTracer = rayTracer;
+        return this;
+    }
+
+    /**
      * Function for to create ray through pixel
      * @param nX Represents amount of columns
      * @param nY Represents amount of rows
@@ -142,4 +174,82 @@ public class Camera {
 
         return new Ray(p0, vi_j);
     }
+
+    /**
+     * This function create a ray, scan him with the traceRay and return the color
+     * @param j index
+     * @param i index
+     * @param nX resolution
+     * @param nY resolution
+     * @return the color of the ray
+     */
+    private Color castRay(int j,int i,int nX,int nY) {
+        return rayTracer.traceRay(constructRay(nX,nY,j,i));
+    }
+
+    /**
+     * Color the image pixel by pixel
+     */
+    public void renderImage() {
+        if (p0==null || vup==null || vto==null || vright==null || width==0||
+                height==0 || distance==0 || imageWriter==null || rayTracer==null) {
+            throw new MissingResourceException(
+                    "Missing resource",
+                    getClass().getName(),
+                    ""
+            );
+        }
+
+        Color color;
+        for(int i = 0; i < imageWriter.getNx(); i++)
+        {
+            for(int j = 0 ; j < imageWriter.getNy(); j++)
+            {
+                color = castRay(j, i, imageWriter.getNx(), imageWriter.getNy());
+                imageWriter.writePixel(j, i, color);
+            }
+        }
+    }
+
+    /**
+     * Print the grid on the image
+     * @param interval fix field
+     * @param color color of the grid
+     */
+    public void printGrid(int interval, Color color){
+        if(imageWriter==null){
+            throw new MissingResourceException("imageWriter is null",getClass().getName(),"");
+        }
+
+        for(int row = 0; row < 10; row++) {
+            for(int j = 0; j < 1000; j++) {
+                imageWriter.writePixel(row*100, j, color);
+            }
+        }
+
+        for(int col = 0; col < 10; col++) {
+            for(int j = 0; j < 1000; j++) {
+                imageWriter.writePixel(j, col*100, color);
+            }
+        }
+
+        imageWriter.writeToImage();
+    }
+
+    /**
+     * Generate the image in the folder
+     */
+    public void writeToImage(){
+        if(imageWriter==null){
+            throw new MissingResourceException(
+                    "imageWriter is null",
+                    getClass().getName(),
+                    ""
+            );
+        }
+
+        imageWriter.writeToImage();
+    }
+
+
 }

@@ -8,9 +8,14 @@ import java.util.Objects;
 public class Point {
 
     /**
-     * final field Double3 without
+     * final field Double3
      */
     final Double3 xyz;
+
+    /**
+     * final field Point (0, 0, 0)
+     */
+    public static final Point ZERO = new Point(Double3.ZERO);
 
     /**
      * Constructor of Point with 3 doubles in parameter
