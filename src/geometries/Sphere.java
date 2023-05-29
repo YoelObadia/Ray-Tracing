@@ -7,7 +7,7 @@ import static primitives.Util.*;
 /**
  * Class sphere
  */
-public class Sphere extends RadialGeometry implements Geometry{
+public class Sphere extends RadialGeometry {
 
     /**
      * Point that is the center of the sphere
@@ -62,7 +62,7 @@ public class Sphere extends RadialGeometry implements Geometry{
      * @return list of intersections points
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
         Vector u = center.subtract(ray.getP0());
         double tm = alignZero(u.dotProduct(ray.getDir()));
@@ -87,19 +87,19 @@ public class Sphere extends RadialGeometry implements Geometry{
         if(t1 > 0 && t2 > 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
-            return List.of(p1, p2);
+            return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
         }
 
         // 1 intersection
         if (t1 > 0) {
             Point p1 = ray.getPoint(t1);
-            return List.of(p1);
+            return List.of(new GeoPoint(this,p1));
         }
 
         // 1 intersection
         if (t2 > 0) {
             Point p2 = ray.getPoint(t2);
-            return List.of(p2);
+            return List.of(new GeoPoint(this,p2));
         }
 
         return null;

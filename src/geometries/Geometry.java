@@ -1,17 +1,38 @@
 package geometries;
 
-import primitives.Point;
-import primitives.Vector;
+import primitives.*;
 
 /**
- * Interface Geometry that all the geometries of the project will implement
+ * Abstract class Geometry that all the geometries of the project will implement
  */
-public interface Geometry extends Intersectable{
+public abstract class Geometry extends Intersectable{
+
+    /**
+     * Field emission
+     */
+    protected Color emission = Color.BLACK;
+
+    /** Getter of emission
+     * @return Color
+     */
+    public Color getEmission() {
+        return emission;
+    }
+
+    /**
+     * Setter of emission
+     * @param emission color
+     * @return this
+     */
+    public Geometry setEmission(Color emission) {
+        this.emission = emission;
+        return this;
+    }
 
     /**
      * Definition of the function getNormal
      * @param point that is the point on the geometry
      * @return the same vector with length = 1
      */
-    public Vector getNormal(Point point);
+    public abstract Vector getNormal(Point point);
 }

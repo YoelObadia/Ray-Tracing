@@ -1,9 +1,7 @@
 package primitives;
 
-import java.util.List;
-import java.util.Objects;
-
-import static primitives.Util.*;
+import geometries.Intersectable.GeoPoint;
+import java.util.*;
 
 /**
  * This class will serve to use
@@ -81,15 +79,27 @@ public class Ray {
     }
 
     /**
-     * Function that calculate the minimal distance between
-     * head of a ray and a list of intersection points
-     * @param points list
+     * This function call the function findGeoClosestPoint()
+     * @param intersections list
      * @return the closest point of the head of the ray
      */
-    public Point findClosestPoint(List<Point> points) {
+    public Point findClosestPoint(List<Point> intersections) {
+        return intersections == null ? null
+                : findGeoClosestPoint(intersections.stream()
+                .map(p -> new GeoPoint(null, p)).toList()).point;
+    }
+
+
+    /**
+     * Function that calculate the minimal distance between
+     * head of a ray and a list of intersection points
+     * @param intersections list
+     * @return the closest GeoPoint of the head of the ray
+     */
+    public GeoPoint findGeoClosestPoint(List<GeoPoint> intersections) {
 
         // There are no points
-        if(points == null)
+        if(intersections == null)
             return null;
 
         // We'll every time compare if the distance with the point is lower than the precedent distance.
@@ -98,13 +108,13 @@ public class Ray {
         double minDistance;
 
         // Initialisation of the point that we'll return
-        Point closestPoint = new Point(0, 0, 0);
+        GeoPoint closestPoint = null;
 
-        for (Point point: points) {
-            if(point.distance(p0) < maxDistance) {
-                minDistance = point.distance(p0);
+        for (GeoPoint geoPoint: intersections) {
+            if(geoPoint.point.distance(p0) < maxDistance) {
+                minDistance = geoPoint.point.distance(p0);
                 maxDistance = minDistance;
-                closestPoint = point;
+                closestPoint = geoPoint;
             }
         }
 

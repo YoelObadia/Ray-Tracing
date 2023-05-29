@@ -200,12 +200,11 @@ public class Camera {
             );
         }
 
-        Color color;
         for(int i = 0; i < imageWriter.getNx(); i++)
         {
             for(int j = 0 ; j < imageWriter.getNy(); j++)
             {
-                color = castRay(j, i, imageWriter.getNx(), imageWriter.getNy());
+                Color color = castRay(j, i, imageWriter.getNx(), imageWriter.getNy());
                 imageWriter.writePixel(j, i, color);
             }
         }

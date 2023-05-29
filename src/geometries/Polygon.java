@@ -10,7 +10,7 @@ import java.util.List;
  *
  * @author Dan
  */
-public class Polygon implements Geometry {
+public class Polygon extends Geometry {
     /**
      * List of polygon's vertices
      */
@@ -100,7 +100,7 @@ public class Polygon implements Geometry {
      * @return list of intersections points
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
         // First ,we check if the plane of our polygon intersects with the ray,
         // if there's no intersection with the
@@ -124,7 +124,7 @@ public class Polygon implements Geometry {
         // The polygon, which is done by checking that P is
         // to the same side of each line made by the points.
 
-        List<Point> intersections = plane.findIntsersections(ray);
+        List<GeoPoint> intersections = plane.findGeoIntsersections(ray);
 
         if (intersections == null)
             return null;

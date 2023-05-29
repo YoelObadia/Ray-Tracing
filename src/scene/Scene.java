@@ -1,6 +1,6 @@
 package scene;
 
-import geometries.Geometries;
+import geometries.*;
 import lighting.AmbientLight;
 import primitives.*;
 
@@ -22,7 +22,7 @@ public class Scene {
     /**
      * Ambient light of the scene with default value
      */
-    public AmbientLight ambientLight = new AmbientLight(background, Double3.ZERO);
+    public AmbientLight ambientLight = AmbientLight.NONE;
 
     /**
      * 3D model

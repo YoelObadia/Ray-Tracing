@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Class Triangle that inherit from Polygon
  */
-public class Triangle extends Polygon implements Geometry{
+public class Triangle extends Polygon {
 
     /**
      * Constructor of Triangle and execute the constructor of Polygon with super()
@@ -22,7 +22,7 @@ public class Triangle extends Polygon implements Geometry{
      * @return list of intersections
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
         Point p = ray.getP0();
         Vector v = ray.getDir();
@@ -46,7 +46,7 @@ public class Triangle extends Polygon implements Geometry{
 
         // The point is inside if and only if all v∙ni have the same sign (+/-)
         if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
-            return plane.findIntsersections(ray);
+            return plane.findGeoIntsersections(ray);
         }
 
         return null;

@@ -2,6 +2,7 @@ package renderer;
 
 import primitives.*;
 import scene.Scene;
+import geometries.Intersectable.GeoPoint;
 
 /**
  * Class RayTracerBasic inherit from the abstract class RayTracerBse
@@ -18,25 +19,30 @@ public class RayTracerBasic extends RayTracerBase{
     }
 
     /**
-     * Use of the function traceRay
+     * Search the geometries intersections in the scene.
+     * If a geometry is founded, so the closest point is searched.
+     * After this, the point is colored.
+     * If there aren't intersections, the color is background (BLACK)
      * @param ray through the scene
      * @return Color
      */
     @Override
     public Color traceRay(Ray ray) {
-        var intersections = scene.geometries.findIntsersections(ray);
+        var intersections = scene.geometries.findGeoIntsersections(ray);
         if (intersections.size() == 0)
             return scene.background;
-        Point closestPoint = ray.findClosestPoint(intersections);
+        GeoPoint closestPoint = ray.findGeoClosestPoint(intersections);
         return calcColor(closestPoint);
     }
 
+
     /**
      * Helper function
-     * @param point parameter
+     * @param gp parameter
      * @return Color
      */
-    private Color calcColor(Point point) {
-        return scene.ambientLight.getIntensity();
+    private Color calcColor(GeoPoint gp) {
+        return scene.ambientLight.getIntensity()
+                .add(gp.geometry.getEmission());
     }
 }

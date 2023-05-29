@@ -8,7 +8,7 @@ import static primitives.Util.*;
  * Class Plane that contains 2 fields: point and vector
  * These are the 2 things that make a plane
  */
-public class Plane implements Geometry {
+public class Plane extends Geometry {
 
     /**
      * Field point
@@ -81,7 +81,7 @@ public class Plane implements Geometry {
      * @return list of intersections points
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
         Vector p0Q;
 
@@ -114,7 +114,7 @@ public class Plane implements Geometry {
         if (t <= 0) {
             return null;
         } else {
-            return List.of((ray.getPoint(t)));
+            return List.of((new GeoPoint(this,ray.getPoint(t))));
         }
 
     }

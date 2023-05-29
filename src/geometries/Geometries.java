@@ -8,7 +8,7 @@ import java.util.*;
  * composed of several geometries and so this class make collection of geometries.
  * We use for this the design patterns Composite and Iterator.
  */
-public class Geometries implements Intersectable{
+public class Geometries extends Intersectable{
 
     /**
      * Private LinkedList of Intersectable type for the Composite design pattern
@@ -40,19 +40,19 @@ public class Geometries implements Intersectable{
     }
 
     /**
-     * Use of the function findIntersections from the interface Intersectable
+     * Use of the function findGeoIntsersectionsHelper from the interface Intersectable
      * We will iterate the List that contains several geometries and
-     * for each geometry, we will call his findIntersection function.
+     * for each geometry, we will call his findGeoIntsersections function.
      * @param ray that allow us to know if there are intersections
      * @return list of intersections points
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
-        List<Point> intersections = new LinkedList<>();
+        List<GeoPoint> intersections = new LinkedList<>();
 
         for (Intersectable geometry : geometries) {
-            var temp = geometry.findIntsersections(ray);
+            var temp = geometry.findGeoIntsersections(ray);
             if (temp != null)
                 intersections.addAll(temp);
         }

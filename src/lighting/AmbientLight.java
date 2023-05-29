@@ -15,7 +15,7 @@ public class AmbientLight {
     /**
      * Ambient light default value (black)
      */
-    private static final AmbientLight NONE = new AmbientLight(Color.BLACK, Double3.ZERO);
+    public static final AmbientLight NONE=new AmbientLight(Color.BLACK,Double3.ZERO);
 
     /**
      * Constructor of AmbientLight with 2 parameters

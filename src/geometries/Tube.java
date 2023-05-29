@@ -9,7 +9,7 @@ import static primitives.Util.*;
 /**
  * Class Tube: geometry of the project
  */
-public class Tube implements Geometry {
+public class Tube extends RadialGeometry {
 
     /**
      * Field axisRay that is the ray of the tube
@@ -84,7 +84,7 @@ public class Tube implements Geometry {
      * @return list of intersections points
      */
     @Override
-    public List<Point> findIntsersections(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
         /*
             The equation for a tube of radius r oriented along a line pa + vat:
@@ -176,13 +176,13 @@ public class Tube implements Geometry {
             if (t1 > 0 && t2 > 0) {
                 Point p1 = ray.getPoint(t1);
                 Point p2 = ray.getPoint(t2);
-                return List.of(p1, p2);
+                return List.of(new GeoPoint(this,p1), new GeoPoint(this, p2));
             } else if (t1 > 0) {
                 Point p1 = ray.getPoint(t1);
-                return List.of(p1);
+                return List.of(new GeoPoint(this,p1));
             } else if (t2 > 0) {
                 Point p2 = ray.getPoint(t2);
-                return List.of(p2);
+                return List.of(new GeoPoint(this,p2));
             }
         }
         return null;
