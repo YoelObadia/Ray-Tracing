@@ -1,17 +1,11 @@
 package lighting;
 
-import geometries.Geometry;
 import primitives.*;
 
 /**
- * Class to implement ambient light of the scene
+ * Class to implement ambient light of the scene and inherit of the abstract class Light
  */
-public class AmbientLight {
-
-    /**
-     * Field intensity of ambient light
-     */
-    private Color intensity;
+public class AmbientLight extends Light {
 
     /**
      * Ambient light default value (black)
@@ -20,18 +14,13 @@ public class AmbientLight {
 
     /**
      * Constructor of AmbientLight with 2 parameters
+     * Use the constructor of Light to initialise intensity
      * @param iA Light intensity according to RGB components
      * @param kA Fill light attenuation coefficient
      */
     public AmbientLight(Color iA, Double3 kA) {
-        this.intensity = iA.scale(kA);
+        super(iA.scale(kA));
     }
 
-    /**
-     * Getter of intensity
-     * @return Color
-     */
-    public Color getIntensity() {
-        return intensity;
-    }
+
 }
