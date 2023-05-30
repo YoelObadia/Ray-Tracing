@@ -116,6 +116,5 @@ public class Plane extends Geometry {
         } else {
             return List.of((new GeoPoint(this,ray.getPoint(t))));
         }
-
     }
 }

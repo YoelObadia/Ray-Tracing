@@ -124,7 +124,7 @@ public class Polygon extends Geometry {
         // The polygon, which is done by checking that P is
         // to the same side of each line made by the points.
 
-        List<GeoPoint> intersections = plane.findGeoIntsersections(ray);
+        var intersections = plane.findIntsersections(ray);
 
         if (intersections == null)
             return null;
@@ -154,6 +154,9 @@ public class Polygon extends Geometry {
                 return null;
         }
 
-        return intersections;
+        // I used stream because if I return just plane.findGeoIntersections() it doesn't work
+        return intersections.stream()
+                .map(gp->new GeoPoint(this,gp))
+                .toList();
     }
 }

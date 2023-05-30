@@ -1,5 +1,6 @@
 package lighting;
 
+import geometries.Geometry;
 import primitives.*;
 
 /**
