@@ -15,7 +15,7 @@ public class Scene {
     public String name;
 
     /**
-     * Background of the scene, black by default
+     * Background of the scene, BLACK by default
      */
     public Color background = Color.BLACK;
 
@@ -25,7 +25,7 @@ public class Scene {
     public AmbientLight ambientLight = AmbientLight.NONE;
 
     /**
-     * 3D model
+     * 3D model geometry
      */
 
     public Geometries geometries = new Geometries();

@@ -166,7 +166,7 @@ public class Tube extends RadialGeometry {
         // Calculate delta for result of equation
         double delta = b * b - 4 * a * c;
 
-        // No intersections
+        // No intersections point
         if (delta <= 0) {
             return null;
         } else {

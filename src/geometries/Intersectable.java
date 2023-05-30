@@ -25,7 +25,7 @@ public abstract class Intersectable {
     /**
      * Function findGeoIntsersections that use the function findGeoIntsersectionsHelper()
      * @param ray through the geometry
-     * @return list of GeoPoints
+     * @return list of intersections GeoPoints
      */
     public final List<GeoPoint> findGeoIntsersections(Ray ray) {
         return findGeoIntsersectionsHelper(ray);
@@ -34,7 +34,7 @@ public abstract class Intersectable {
     /**
      * Function findGeoIntsersectionsHelper() used by each geometry
      * @param ray through the geometry
-     * @return list of GeoPoints
+     * @return list of intersections GeoPoints
      */
     protected abstract List<GeoPoint> findGeoIntsersectionsHelper(Ray ray);
 

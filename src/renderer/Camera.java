@@ -135,7 +135,7 @@ public class Camera {
     /**
      * Setter for renderTest
      * @param rayTracer field
-     * @return rayTracer
+     * @return Camera
      */
     public Camera setRayTracer(RayTracerBase rayTracer) {
         this.rayTracer = rayTracer;

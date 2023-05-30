@@ -3,7 +3,7 @@ package geometries;
 import primitives.*;
 
 /**
- * Abstract class Geometry that all the geometries of the project will implement
+ * Abstract class Geometry that all the geometries of the project will inherit
  */
 public abstract class Geometry extends Intersectable{
 
@@ -13,7 +13,7 @@ public abstract class Geometry extends Intersectable{
     protected Color emission = Color.BLACK;
 
     /** Getter of emission
-     * @return Color
+     * @return Color emission
      */
     public Color getEmission() {
         return emission;

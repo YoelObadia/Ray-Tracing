@@ -49,6 +49,7 @@ public class Triangle extends Polygon {
         // The point is inside if and only if all v∙ni have the same sign (+/-)
         if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
             // I used stream because if I return just plane.findGeoIntersections() it doesn't work
+            // for the multicolor test and the color of triangles doesn't appear
             return (plane.findIntsersections(ray)).stream()
                     .map(gp->new GeoPoint(this,gp))
                     .toList();

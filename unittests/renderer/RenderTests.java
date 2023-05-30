@@ -67,17 +67,26 @@ public class RenderTests {
        //
        scene.geometries.add( //
                new Sphere(new Point(0, 0, -100), 50),
-               // up left
-               new Triangle(new Point(-100, 0, -100), new Point(0, 100, -100), new
-                       Point(-100, 100, -100))
+               // up left triangle
+               new Triangle(
+                       new Point(-100, 0, -100),
+                       new Point(0, 100, -100),
+                       new Point(-100, 100, -100)
+               )
                        .setEmission(new Color(GREEN)),
-               // down left
-               new Triangle(new Point(-100, 0, -100), new Point(0, -100, -100), new
-                       Point(-100, -100, -100))
+               // down left triangle
+               new Triangle(
+                       new Point(-100, 0, -100),
+                       new Point(0, -100, -100),
+                       new Point(-100, -100, -100)
+               )
                        .setEmission(new Color(RED)),
-               // down right
-               new Triangle(new Point(100, 0, -100), new Point(0, -100, -100), new
-                       Point(100, -100, -100))
+               // down right triangle
+               new Triangle(
+                       new Point(100, 0, -100),
+                       new Point(0, -100, -100),
+                       new Point(100, -100, -100)
+               )
                        .setEmission(new Color(BLUE)));
        //
        Camera camera = new Camera(Point.ZERO, new Vector(0, 0, -1), new Vector(0, 1,

@@ -44,7 +44,7 @@ public class Geometries extends Intersectable{
      * We will iterate the List that contains several geometries and
      * for each geometry, we will call his findGeoIntsersections function.
      * @param ray that allow us to know if there are intersections
-     * @return list of intersections points
+     * @return list of intersections GeoPoints
      */
     @Override
     public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {

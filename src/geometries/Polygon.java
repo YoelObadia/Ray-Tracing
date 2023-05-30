@@ -155,6 +155,7 @@ public class Polygon extends Geometry {
         }
 
         // I used stream because if I return just plane.findGeoIntersections() it doesn't work
+        // for the multicolor test and the color of triangles doesn't appear
         return intersections.stream()
                 .map(gp->new GeoPoint(this,gp))
                 .toList();

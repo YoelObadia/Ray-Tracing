@@ -88,7 +88,9 @@ public class Cylinder extends Tube {
                 }
                 // Formula that checks that point is inside the base
                 else if ((
-                        geoPoint.point.subtract(p1).dotProduct(geoPoint.point.subtract(p1)) < this.radius * this.radius)) {
+                        geoPoint.point.subtract(p1).dotProduct(geoPoint.point.subtract(p1)) <
+                                this.radius * this.radius
+                )) {
                     result.add(geoPoint);
                 }
             }
@@ -100,7 +102,8 @@ public class Cylinder extends Tube {
         if (result1 != null) {
             // Add all intersections of tube that are in the cylinder's bounders
             for (GeoPoint geoPoint : result1) {
-                if (va.dotProduct(geoPoint.point.subtract(p1)) > 0 && va.dotProduct(geoPoint.point.subtract(p2)) < 0) {
+                if (va.dotProduct(geoPoint.point.subtract(p1)) > 0
+                        && va.dotProduct(geoPoint.point.subtract(p2)) < 0) {
                     result.add(geoPoint);
                 }
             }
@@ -119,7 +122,9 @@ public class Cylinder extends Tube {
                 }
                 // Formula that checks that point is inside the base
                 else if ((
-                        geoPoint.point.subtract(p2).dotProduct(geoPoint.point.subtract(p2)) < this.radius * this.radius)) {
+                        geoPoint.point.subtract(p2).dotProduct(geoPoint.point.subtract(p2)) <
+                                this.radius * this.radius
+                )) {
                     result.add(geoPoint);
                 }
             }

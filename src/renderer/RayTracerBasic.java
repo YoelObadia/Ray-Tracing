@@ -20,9 +20,9 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * Search the geometries intersections in the scene.
-     * If a geometry is founded, so the closest point is searched.
-     * After this, the point is colored.
-     * If there aren't intersections, the color is background (BLACK)
+     * If a geometry is founded, so the closest GeoPoint is searched.
+     * After this, the GeoPoint is colored.
+     * If there aren't intersections, the color is background (BLACK) by default
      * @param ray through the scene
      * @return Color
      */
@@ -37,7 +37,7 @@ public class RayTracerBasic extends RayTracerBase{
 
 
     /**
-     * Helper function
+     * Helper function for the color
      * @param gp parameter
      * @return Color
      */

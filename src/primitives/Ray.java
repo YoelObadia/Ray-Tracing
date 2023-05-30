@@ -107,7 +107,7 @@ public class Ray {
         double maxDistance = Double.MAX_VALUE;
         double minDistance;
 
-        // Initialisation of the point that we'll return
+        // Initialisation of the GeoPoint that we'll return
         GeoPoint closestPoint = null;
 
         for (GeoPoint geoPoint: intersections) {

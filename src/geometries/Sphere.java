@@ -68,7 +68,7 @@ public class Sphere extends RadialGeometry {
         double tm = alignZero(u.dotProduct(ray.getDir()));
         double d = alignZero(Math.sqrt(u.lengthSquared() - (tm * tm)));
 
-        // No intersections
+        // No intersections point
         if (d >= radius)
             return null;
 
@@ -79,24 +79,24 @@ public class Sphere extends RadialGeometry {
         // We have to check the order of the intersections because
         // there is the possibility of 2 intersections points
 
-        // No intersections
+        // No intersections point
         if(t1 <= 0 && t2 <= 0)
             return null;
 
-        // 2 intersections
+        // 2 intersections points
         if(t1 > 0 && t2 > 0) {
             Point p1 = ray.getPoint(t1);
             Point p2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this,p1), new GeoPoint(this,p2));
         }
 
-        // 1 intersection
+        // 1 intersection point
         if (t1 > 0) {
             Point p1 = ray.getPoint(t1);
             return List.of(new GeoPoint(this,p1));
         }
 
-        // 1 intersection
+        // 1 intersection point
         if (t2 > 0) {
             Point p2 = ray.getPoint(t2);
             return List.of(new GeoPoint(this,p2));

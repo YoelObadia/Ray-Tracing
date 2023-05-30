@@ -114,6 +114,7 @@ public class Plane extends Geometry {
         if (t <= 0) {
             return null;
         } else {
+            // We use the function getPoint of Ray class
             return List.of((new GeoPoint(this,ray.getPoint(t))));
         }
     }
