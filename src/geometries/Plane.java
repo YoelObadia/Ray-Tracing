@@ -83,39 +83,75 @@ public class Plane extends Geometry {
     @Override
     public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
 
-        Vector p0Q;
+        //Vector p0Q;
+//
+        //// q is a point from the plane and getP0 returns the origin of the ray
+        //try {
+        //    p0Q = q0.subtract(ray.getP0());
+        //}
+        //// No intersection
+        //catch (IllegalArgumentException e) {
+        //    return null;
+        //}
+//
+        // /*
+        //    The value of our variable t that we search for is the result of this formula:(p0−l0)⋅n/l⋅n
+        //    p0 is the point of our plane, n is the normal of our plane,
+        //    l0 is the origin point of the ray and l is the vector director of the ray.
+        //    So this value helps us to determine the intersection or not.
+        // */
+        //double check = normal.dotProduct(ray.getDir());
+//
+        //// Ray is parallel to the plane
+        //if (isZero(check)) {
+        //    return null;
+        //}
+//
+        //// It gives us the t to determine the coordinate of the intersection,
+        //// so the x,y,z according to the value of t
+        //double t = alignZero(normal.dotProduct(p0Q) / check);
+//
+        //if (t <= 0) {
+        //    return null;
+        //} else {
+        //    // We use the function getPoint of Ray class
+        //    return List.of((new GeoPoint(this,ray.getPoint(t))));
+        //}
 
-        // q is a point from the plane and getP0 returns the origin of the ray
-        try {
-            p0Q = q0.subtract(ray.getP0());
-        }
-        // No intersection
-        catch (IllegalArgumentException e) {
+        Point P0 = ray.getP0();
+        Vector v = ray.getDir();
+
+        Vector n = normal;
+        //denominator
+        double nv = alignZero(n.dotProduct(v));
+
+        // ray is lying in the plane axis
+        if (isZero(nv)) {
             return null;
         }
 
-         /*
-            The value of our variable t that we search for is the result of this formula:(p0−l0)⋅n/l⋅n
-            p0 is the point of our plane, n is the normal of our plane,
-            l0 is the origin point of the ray and l is the vector director of the ray.
-            So this value helps us to determine the intersection or not.
-         */
-        double check = normal.dotProduct(ray.getDir());
-
-        // Ray is parallel to the plane
-        if (isZero(check)) {
+        //ray cannot start from the plane
+        if (q0.equals(P0)) {
             return null;
         }
 
-        // It gives us the t to determine the coordinate of the intersection,
-        // so the x,y,z according to the value of t
-        double t = alignZero(normal.dotProduct(p0Q) / check);
+        Vector P0_Q0 = q0.subtract(P0);
 
-        if (t <= 0) {
+        //numerator
+        double nP0Q0 = alignZero(n.dotProduct(P0_Q0));
+
+        // ray parallel to the plane
+        if (isZero(nP0Q0)) {
             return null;
-        } else {
-            // We use the function getPoint of Ray class
-            return List.of((new GeoPoint(this,ray.getPoint(t))));
         }
+
+        double t = alignZero(nP0Q0 / nv);
+
+        if(t<=0)
+            return null;
+
+        Point point = ray.getPoint(t);
+
+        return List.of(new GeoPoint(this, point));
     }
 }

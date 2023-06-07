@@ -5,12 +5,19 @@ import primitives.*;
 import scene.Scene;
 import geometries.Intersectable.GeoPoint;
 
+import java.util.List;
+
 import static primitives.Util.alignZero;
 
 /**
  * Class RayTracerBasic inherit from the abstract class RayTracerBse
  */
 public class RayTracerBasic extends RayTracerBase{
+
+    /**
+     * Field fixed for ray head offset size for shading rays
+     */
+    private static final double DELTA = 0.1;
 
     /**
      * Constructor of RayTracerBasic that use the constructor
@@ -55,33 +62,35 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * Helper function for the color from the theory presentation
-     * @param point GeoPoint
+     * @param geoPoint GeoPoint
      * @param ray Ray
      * @return Color
      */
-    private Color calcLocalEffects(GeoPoint point, Ray ray) {
+    private Color calcLocalEffects(GeoPoint geoPoint, Ray ray) {
 
         Vector v = ray.getDir();
-        Vector n = point.geometry.getNormal(point.point);
+        Vector n = geoPoint.geometry.getNormal(geoPoint.point);
         double nv = alignZero(n.dotProduct(v));
 
         if (nv == 0)
             return Color.BLACK;
 
-        double nShininess = point.geometry.getMaterial().nShininess;
-        Double3 kd = point.geometry.getMaterial().kD;
-        Double3 ks = point.geometry.getMaterial().kS;
+        double nShininess = geoPoint.geometry.getMaterial().nShininess;
+        Double3 kd = geoPoint.geometry.getMaterial().kD;
+        Double3 ks = geoPoint.geometry.getMaterial().kS;
         Color color = Color.BLACK;
 
         for (LightSource lightSource : scene.lights) {
-            Vector l = lightSource.getL(point.point);
+            Vector l = lightSource.getL(geoPoint.point);
             double nl = alignZero(n.dotProduct(l));
 
             // sign(nl) == sing(nv)
             if (nl * nv > 0) {
-                Color lightIntensity = lightSource.getIntensity(point.point);
-                color = color.add(calcDiffusive(kd, l, n, lightIntensity),
-                        calcSpecular(ks, l, n, v, nShininess, lightIntensity));
+                if (unshaded(geoPoint, lightSource, l, n, nl)) {
+                    Color lightIntensity = lightSource.getIntensity(geoPoint.point);
+                    color = color.add(calcDiffusive(kd, l, n, lightIntensity),
+                            calcSpecular(ks, l, n, v, nShininess, lightIntensity));
+                }
             }
         }
 
@@ -134,5 +143,35 @@ public class RayTracerBasic extends RayTracerBase{
         }
 
         return lightIntensity.scale(ks.scale(Math.pow(Math.max(0, vR), nShininess)));
+    }
+
+    /**
+     * A method of checking non-shading between a point and the light source
+     * @param gp GeoPoint
+     * @param light LightSource
+     * @param l Vector
+     * @param n Vector
+     * @param nl double
+     * @return Boolean value
+     */
+    private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
+
+        // from point to light source
+        Vector lightDirection = l.scale(-1);
+        Vector deltaVector = n.scale(nl < 0 ? DELTA : -DELTA);
+        Point point = gp.point.add(deltaVector);
+        Ray lightRay = new Ray(point, lightDirection);
+        // This list contains the shadow ray intersections
+        List<GeoPoint> intersections = scene.geometries.findGeoIntsersections(lightRay);
+        if (intersections.size() == 0)
+            return true;
+        for (GeoPoint geoPoint: intersections) {
+            //if( geoPoint.point.distance(gp.point) < light.getDistance(gp.point))
+            // gp.point is the original intersection point
+            if(alignZero(geoPoint.point.distance(gp.point) -
+                    light.getDistance(geoPoint.point)) < 0)
+                return false;
+        }
+        return false;
     }
 }

@@ -50,9 +50,14 @@ public class Triangle extends Polygon {
         if ((s1 > 0 && s2 > 0 && s3 > 0) || (s1 < 0 && s2 < 0 && s3 < 0)) {
             // I used stream because if I return just plane.findGeoIntersections() it doesn't work
             // for the multicolor test and the color of triangles doesn't appear
+
+            if(plane.findGeoIntsersections(ray) == null)
+                return null;
+            //return plane.findGeoIntsersections(ray);
             return (plane.findIntsersections(ray)).stream()
                     .map(gp->new GeoPoint(this,gp))
                     .toList();
+
         }
 
         return null;
