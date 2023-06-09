@@ -161,17 +161,20 @@ public class RayTracerBasic extends RayTracerBase{
         Vector deltaVector = n.scale(nl < 0 ? DELTA : -DELTA);
         Point point = gp.point.add(deltaVector);
         Ray lightRay = new Ray(point, lightDirection);
+
         // This list contains the shadow ray intersections
         List<GeoPoint> intersections = scene.geometries.findGeoIntsersections(lightRay);
+
         if (intersections.size() == 0)
             return true;
+
+        // if there are points in the intersections list
+        // that are closer to the point than light source
         for (GeoPoint geoPoint: intersections) {
-            //if( geoPoint.point.distance(gp.point) < light.getDistance(gp.point))
-            // gp.point is the original intersection point
-            if(alignZero(geoPoint.point.distance(gp.point) -
-                    light.getDistance(geoPoint.point)) < 0)
+            if(lightRay.getP0().distance(geoPoint.point) < light.getDistance(geoPoint.point))
                 return false;
         }
-        return false;
+
+        return true;
     }
 }
