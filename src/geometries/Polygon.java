@@ -1,8 +1,13 @@
 package geometries;
 
-import primitives.*;
-import static primitives.Util.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+
 import java.util.List;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Polygon class represents two-dimensional polygon in 3D Cartesian coordinate
@@ -96,6 +101,7 @@ public class Polygon extends Geometry {
 
     /**
      * Use of the function findIntersections from the interface intersectable
+     *
      * @param ray that allow us to know if there are intersections
      * @return list of intersections points
      */
@@ -157,7 +163,7 @@ public class Polygon extends Geometry {
         // I used stream because if I return just plane.findGeoIntersections() it doesn't work
         // for the multicolor test and the color of triangles doesn't appear
         return intersections.stream()
-                .map(gp->new GeoPoint(this,gp))
+                .map(gp -> new GeoPoint(this, gp))
                 .toList();
     }
 }

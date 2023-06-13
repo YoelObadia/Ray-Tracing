@@ -1,12 +1,20 @@
 package primitives;
 
 import geometries.Intersectable.GeoPoint;
-import java.util.*;
+
+import java.util.List;
+import java.util.Objects;
+
+import static primitives.Util.isZero;
 
 /**
  * This class will serve to use
  */
 public class Ray {
+    /**
+     * Field fixed for ray head offset size for shading rays
+     */
+    private static final double DELTA = 0.1;
 
     /**
      * Head of the ray
@@ -20,12 +28,22 @@ public class Ray {
 
     /**
      * Constructor of Ray with 2 parameters
+     *
      * @param p0  as first parameter
      * @param dir as second parameter
      */
     public Ray(Point p0, Vector dir) {
         this.p0 = p0;
         this.dir = dir.normalize();
+    }
+
+    public Ray(Point point, Vector dir, Vector n) {
+        double ndir = n.dotProduct(dir);
+        Vector deltaVector = n.scale(ndir > 0 ? DELTA : -DELTA);
+
+        this.p0 = point.add(deltaVector);
+        this.dir = dir.normalize();
+
     }
 
     @Override
@@ -51,6 +69,7 @@ public class Ray {
 
     /**
      * Getter for the head of the ray
+     *
      * @return point p0
      */
     public Point getP0() {
@@ -59,6 +78,7 @@ public class Ray {
 
     /**
      * Getter for the vector director of the ray
+     *
      * @return vector dir
      */
     public Vector getDir() {
@@ -67,53 +87,55 @@ public class Ray {
 
     /**
      * Refactoring for the calculation code of a point on a ray
+     *
      * @param t distance from ray head
      * @return the point
      */
     public Point getPoint(double t) {
-        if (t == 0)
+        if (isZero(t))
             return p0;
-        else {
-            return (p0).add(dir.scale(t));
-        }
+        return p0.add(dir.scale(t));
     }
 
     /**
      * This function call the function findGeoClosestPoint()
+     *
      * @param intersections list
      * @return the closest point of the head of the ray
      */
     public Point findClosestPoint(List<Point> intersections) {
         return intersections == null ? null
                 : findGeoClosestPoint(intersections.stream()
-                .map(p -> new GeoPoint(null, p)).toList()).point;
+                .map(p -> new GeoPoint(null, p))
+                .toList()).point;
     }
 
 
     /**
      * Function that calculate the minimal distance between
      * head of a ray and a list of intersection points
+     *
      * @param intersections list
      * @return the closest GeoPoint of the head of the ray
      */
     public GeoPoint findGeoClosestPoint(List<GeoPoint> intersections) {
 
         // There are no points
-        if(intersections == null)
+        if (intersections == null)
             return null;
 
         // We'll every time compare if the distance with the point is lower than the precedent distance.
         // For this, we need to begin by the maximal value.
-        double maxDistance = Double.MAX_VALUE;
-        double minDistance;
+        double minDistance = Double.MAX_VALUE;
+        double distance;
 
         // Initialisation of the GeoPoint that we'll return
         GeoPoint closestPoint = null;
 
-        for (GeoPoint geoPoint: intersections) {
-            if(geoPoint.point.distance(p0) < maxDistance) {
-                minDistance = geoPoint.point.distance(p0);
-                maxDistance = minDistance;
+        for (GeoPoint geoPoint : intersections) {
+            distance= geoPoint.point.distance(p0);
+            if (distance < minDistance) {
+                minDistance = distance;
                 closestPoint = geoPoint;
             }
         }

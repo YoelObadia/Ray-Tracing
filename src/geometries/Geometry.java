@@ -1,11 +1,14 @@
 package geometries;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Material;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * Abstract class Geometry that all the geometries of the project will inherit
  */
-public abstract class Geometry extends Intersectable{
+public abstract class Geometry extends Intersectable {
 
     /**
      * Field emission
@@ -19,6 +22,7 @@ public abstract class Geometry extends Intersectable{
 
     /**
      * Getter of emission
+     *
      * @return Color emission
      */
     public Color getEmission() {
@@ -27,6 +31,7 @@ public abstract class Geometry extends Intersectable{
 
     /**
      * Setter of emission
+     *
      * @param emission color
      * @return this
      */
@@ -37,6 +42,7 @@ public abstract class Geometry extends Intersectable{
 
     /**
      * Getter for the field material
+     *
      * @return Material
      */
     public Material getMaterial() {
@@ -45,6 +51,7 @@ public abstract class Geometry extends Intersectable{
 
     /**
      * Setter for material
+     *
      * @param material Material
      * @return this
      */
@@ -55,6 +62,7 @@ public abstract class Geometry extends Intersectable{
 
     /**
      * Definition of the function getNormal
+     *
      * @param point that is the point on the geometry
      * @return the same vector with length = 1
      */

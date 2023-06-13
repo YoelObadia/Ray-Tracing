@@ -1,10 +1,16 @@
 package renderer;
 
-import geometries.*;
-import primitives.*;
-import java.util.List;
+import geometries.Intersectable;
+import geometries.Plane;
+import geometries.Sphere;
+import geometries.Triangle;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import primitives.Point;
+import primitives.Vector;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Testing Camera class for sphere, plane and triangle
@@ -13,11 +19,12 @@ public class CameraIntegrationTest {
 
     /**
      * Help function to avoid redundancies
-     * @param camera for create ray
+     *
+     * @param camera   for create ray
      * @param geometry the form for the test
      * @return number of intersections
      */
-    private int countIntersectionsCameraGeometry(Camera camera, Intersectable geometry){
+    private int countIntersectionsCameraGeometry(Camera camera, Intersectable geometry) {
 
         // This function return the number of point of intersection
         // between the geometries and a ray from our camera
@@ -55,7 +62,7 @@ public class CameraIntegrationTest {
         assertEquals(
                 2,
                 countIntersectionsCameraGeometry(
-                        cam1, new Sphere(new Point(0,0,-3), 1d)),
+                        cam1, new Sphere(new Point(0, 0, -3), 1d)),
                 "Bad number of intersections"
         );
 
@@ -63,7 +70,7 @@ public class CameraIntegrationTest {
         assertEquals(
                 18,
                 countIntersectionsCameraGeometry(
-                        cam2, new Sphere(new Point(0,0,-2.5), 2.5)),
+                        cam2, new Sphere(new Point(0, 0, -2.5), 2.5)),
                 "Bad number of intersections"
         );
 
@@ -71,7 +78,7 @@ public class CameraIntegrationTest {
         assertEquals(
                 10,
                 countIntersectionsCameraGeometry(
-                        cam2, new Sphere(new Point(0,0,-2), 2d)),
+                        cam2, new Sphere(new Point(0, 0, -2), 2d)),
                 "Bad number of intersections"
         );
 
@@ -161,8 +168,8 @@ public class CameraIntegrationTest {
                 countIntersectionsCameraGeometry(
                         cam,
                         new Plane(
-                                new Point(0,0,2),
-                                new Vector(1,1,1))
+                                new Point(0, 0, 2),
+                                new Vector(1, 1, 1))
                 ),
                 "Bad number of intersections"
         );
@@ -174,7 +181,7 @@ public class CameraIntegrationTest {
                         cam,
                         new Plane(
                                 new Point(0, 0, -4),
-                                new Vector(0,0,1))
+                                new Vector(0, 0, 1))
                 ),
                 "Bad number of intersections"
         );

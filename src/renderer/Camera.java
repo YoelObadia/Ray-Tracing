@@ -1,8 +1,13 @@
 package renderer;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.MissingResourceException;
+
+import static primitives.Util.isZero;
 
 public class Camera {
 
@@ -14,17 +19,17 @@ public class Camera {
     /**
      * Vector direction of the camera vTo
      */
-    private Vector vto;
+    private Vector vTo;
 
     /**
      * Vector direction of the camera vUp
      */
-    private Vector vup;
+    private Vector vUp;
 
     /**
      * Vector direction of the camera vRight
      */
-    private Vector vright;
+    private Vector vRight;
 
     /**
      * Width of the View Plane
@@ -51,20 +56,42 @@ public class Camera {
      */
     private RayTracerBase rayTracer;
 
+    /**
+     * Constructor of Camera with 3 parameters: position point and 2 vectors.
+     * The 2 vectors are used to calculate the third.
+     * If the 2 vectors are not orthogonal, there is an exception.
+     *
+     * @param p0  position of the camera
+     * @param vTo vector direction
+     * @param vUp vector direction
+     */
+    public Camera(Point p0, Vector vTo, Vector vUp) {
+        if (!isZero(vTo.dotProduct(vUp))) {
+            throw new IllegalArgumentException("The two unit vectors vTo and vup are not orthogonal");
+        }
+
+        this.p0 = p0;
+
+        this.vTo = vTo.normalize();
+        this.vUp = vUp.normalize();
+
+        this.vRight = this.vTo.crossProduct(this.vUp);
+    }
+
     public Point getP0() {
         return p0;
     }
 
-    public Vector getVto() {
-        return vto;
+    public Vector getVTo() {
+        return vTo;
     }
 
-    public Vector getVup() {
-        return vup;
+    public Vector getVUp() {
+        return vUp;
     }
 
-    public Vector getVright() {
-        return vright;
+    public Vector getVRight() {
+        return vRight;
     }
 
     public double getWidth() {
@@ -80,50 +107,32 @@ public class Camera {
     }
 
     /**
-     * Constructor of Camera with 3 parameters: position point and 2 vectors.
-     * The 2 vectors are used to calculate the third.
-     * If the 2 vectors are not orthogonal, there is an exception.
-     * @param p0 position of the camera
-     * @param vto vector direction
-     * @param vup vector direction
-     */
-    public  Camera(Point p0, Vector vto, Vector vup) {
-        this.p0 = p0;
-        this.vto = vto.normalize();
-        this.vup = vup.normalize();
-        if (vto.dotProduct(vup) == 0) {
-            this.vright = vto.crossProduct(vup).normalize();
-        } else {
-            throw new IllegalArgumentException("The two unit vectors vto and vup are not orthogonal");
-        }
-    }
-
-    /**
      * Setter for the dimension of the View Plane
-     * @param width of the View plane
+     *
+     * @param width  of the View plane
      * @param height of the View Plane
      * @return this
      */
-    public Camera setVPSize(double width, double height)
-    {
-        this.width=width;
-        this.height=height;
+    public Camera setVPSize(double width, double height) {
+        this.width = width;
+        this.height = height;
         return this;
     }
 
     /**
      * Setter for the distance from the View Plane
+     *
      * @param distance between Camera and View Plane
      * @return this
      */
-    public Camera setVPDistance(double distance)
-    {
-        this.distance=distance;
+    public Camera setVPDistance(double distance) {
+        this.distance = distance;
         return this;
     }
 
     /**
      * Setter for renderTest
+     *
      * @param imageWriter field
      * @return imageWriter
      */
@@ -134,6 +143,7 @@ public class Camera {
 
     /**
      * Setter for renderTest
+     *
      * @param rayTracer field
      * @return Camera
      */
@@ -144,55 +154,69 @@ public class Camera {
 
     /**
      * Function for to create ray through pixel
+     *
      * @param nX Represents amount of columns
      * @param nY Represents amount of rows
-     * @param j Represents column of pixel
-     * @param i Represent row of pixel
+     * @param j  Represents column of pixel
+     * @param i  Represent row of pixel
      * @return Ray through pixel
      */
-    public Ray constructRay(int nX,int nY,int j,int i){
+    public Ray constructRay(int nX, int nY, int j, int i) {
 
         // Image center
-        Point pc= p0.add(vto.scale(distance));
+        Point pc = p0.add(vTo.scale(distance));
 
         // Ratio (pixel width & height)
-        double Ry=height/nY;
-        double Rx=width/nX;
+        double Ry = height / nY;
+        double Rx = width / nX;
 
         // Pixel[i,j] center
-        double yi=-(i-(double)(nY-1)/2)*Ry;
-        double xj=(j-(double)(nX-1)/2)*Rx;
+        double yi = -(i - (nY - 1) / 2d) * Ry;
+        double xj = (j - (nX - 1) / 2d) * Rx;
 
-        Point pi_j=pc;
+        Point Pij = pc;
 
-        if (xj!=0)
-            pi_j=pi_j.add(vright.scale(xj));
-        if (yi!=0)
-            pi_j=pi_j.add(vup.scale(yi));
+        if (!isZero(xj)) {
+            Pij = Pij.add(vRight.scale(xj));
+        }
+        if (!isZero(yi)) {
+            Pij = Pij.add(vUp.scale(yi));
+        }
 
-        Vector vi_j=pi_j.subtract(p0);
+        // vector from camera's eye in the direction of point(i,j) in the viewplane
+        Vector Vij = Pij.subtract(p0);
 
-        return new Ray(p0, vi_j);
+        return new Ray(p0, Vij);
     }
 
     /**
      * This function create a ray, scan him with the traceRay and return the color
-     * @param j index
-     * @param i index
+     *
      * @param nX resolution
      * @param nY resolution
+     * @param i  index
+     * @param j  index
      * @return the color of the ray
      */
-    private Color castRay(int j,int i,int nX,int nY) {
-        return rayTracer.traceRay(constructRay(nX,nY,j,i));
+    private void castRay(int nX, int nY, int i, int j) {
+        Ray ray = constructRay(nX, nY, j, i);
+        Color pixelColor = rayTracer.traceRay(ray);
+        imageWriter.writePixel(j, i, pixelColor);
     }
 
     /**
      * Color the image pixel by pixel
      */
-    public void renderImage() {
-        if (p0==null || vup==null || vto==null || vright==null || width==0||
-                height==0 || distance==0 || imageWriter==null || rayTracer==null) {
+    public Camera renderImage() {
+        if (p0 == null
+                || vUp == null
+                || vTo == null
+                || vRight == null
+                || width == 0
+                || height == 0
+                || distance == 0
+                || imageWriter == null
+                || rayTracer == null) {
             throw new MissingResourceException(
                     "Missing resource",
                     getClass().getName(),
@@ -200,35 +224,37 @@ public class Camera {
             );
         }
 
-        for(int i = 0; i < imageWriter.getNx(); i++)
-        {
-            for(int j = 0 ; j < imageWriter.getNy(); j++)
-            {
-                Color color = castRay(j, i, imageWriter.getNx(), imageWriter.getNy());
-                imageWriter.writePixel(j, i, color);
+        int nX = imageWriter.getNx();
+        int nY = imageWriter.getNy();
+
+        for (int i = 0; i < nY; i++) {
+            for (int j = 0; j < nX; j++) {
+                castRay(nX, nY, i, j);
             }
         }
+        return this;
     }
 
     /**
      * Print the grid on the image
+     *
      * @param interval fix field
-     * @param color color of the grid
+     * @param color    color of the grid
      */
-    public void printGrid(int interval, Color color){
-        if(imageWriter==null){
-            throw new MissingResourceException("imageWriter is null",getClass().getName(),"");
+    public void printGrid(int interval, Color color) {
+        if (imageWriter == null) {
+            throw new MissingResourceException("imageWriter is null", getClass().getName(), "");
         }
 
-        for(int row = 0; row < 10; row++) {
-            for(int j = 0; j < 1000; j++) {
-                imageWriter.writePixel(row*100, j, color);
+        for (int row = 0; row < 10; row++) {
+            for (int j = 0; j < 1000; j++) {
+                imageWriter.writePixel(row * 100, j, color);
             }
         }
 
-        for(int col = 0; col < 10; col++) {
-            for(int j = 0; j < 1000; j++) {
-                imageWriter.writePixel(j, col*100, color);
+        for (int col = 0; col < 10; col++) {
+            for (int j = 0; j < 1000; j++) {
+                imageWriter.writePixel(j, col * 100, color);
             }
         }
 
@@ -238,8 +264,8 @@ public class Camera {
     /**
      * Generate the image in the folder
      */
-    public void writeToImage(){
-        if(imageWriter==null){
+    public Camera writeToImage() {
+        if (imageWriter == null) {
             throw new MissingResourceException(
                     "imageWriter is null",
                     getClass().getName(),
@@ -248,6 +274,7 @@ public class Camera {
         }
 
         imageWriter.writeToImage();
+        return  this;
     }
 
 

@@ -1,9 +1,10 @@
 package scene;
 /*shimon*/
-import geometries.*;
+
+import geometries.Geometries;
 import lighting.AmbientLight;
 import lighting.LightSource;
-import primitives.*;
+import primitives.Color;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +42,7 @@ public class Scene {
 
     /**
      * Constructor of the scene with 1 parameter
+     *
      * @param name of the scene
      */
     public Scene(String name) {
@@ -48,7 +50,8 @@ public class Scene {
     }
 
     /**
-     *  Setter of background
+     * Setter of background
+     *
      * @param background Color
      * @return this
      */
@@ -59,6 +62,7 @@ public class Scene {
 
     /**
      * Setter of ambientLight
+     *
      * @param ambientLight AmbientLight
      * @return this
      */
@@ -69,6 +73,7 @@ public class Scene {
 
     /**
      * Setter of 3D model
+     *
      * @param geometries 3D model
      * @return this
      */
@@ -79,6 +84,7 @@ public class Scene {
 
     /**
      * Setter of list of LightSource
+     *
      * @param lights list
      * @return this
      */

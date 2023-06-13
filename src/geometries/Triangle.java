@@ -1,9 +1,10 @@
 package geometries;
 
-import primitives.*;
-import java.util.List;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
-import static primitives.Util.isZero;
+import java.util.List;
 
 /**
  * Class Triangle that inherit from Polygon
@@ -12,6 +13,7 @@ public class Triangle extends Polygon {
 
     /**
      * Constructor of Triangle and execute the constructor of Polygon with super()
+     *
      * @param vertices
      */
     public Triangle(Point... vertices) {
@@ -20,6 +22,7 @@ public class Triangle extends Polygon {
 
     /**
      * Use of the function findIntersections from the interface intersectable
+     *
      * @param ray that allow us to know if there are intersections
      * @return list of intersections
      */
@@ -51,11 +54,11 @@ public class Triangle extends Polygon {
             // I used stream because if I return just plane.findGeoIntersections() it doesn't work
             // for the multicolor test and the color of triangles doesn't appear
 
-            if(plane.findGeoIntsersections(ray) == null)
+            if (plane.findGeoIntsersections(ray) == null)
                 return null;
             //return plane.findGeoIntsersections(ray);
             return (plane.findIntsersections(ray)).stream()
-                    .map(gp->new GeoPoint(this,gp))
+                    .map(gp -> new GeoPoint(this, gp))
                     .toList();
 
         }

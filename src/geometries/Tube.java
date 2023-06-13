@@ -1,10 +1,13 @@
 package geometries;
 
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
-import static primitives.Util.*;
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Class Tube: geometry of the project
@@ -23,6 +26,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Constructor of Tube with 2 parameters
+     *
      * @param axisRay ray of the tube
      * @param radius  radius of the tube
      */
@@ -33,6 +37,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Getter for the field axisRay
+     *
      * @return axisRay of the tube
      */
     public Ray getAxisRay() {
@@ -41,6 +46,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Getter for the field radius
+     *
      * @return radius of the tube
      */
     public double getRadius() {
@@ -49,6 +55,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Use of the function getNormal of the interface Geometry
+     *
      * @param point that is the point on the geometry
      * @return vector normal
      */
@@ -80,6 +87,7 @@ public class Tube extends RadialGeometry {
 
     /**
      * Use of the function findIntersections from the interface intersectable
+     *
      * @param ray that allow us to know if there are intersections
      * @return list of intersections points
      */
@@ -176,13 +184,13 @@ public class Tube extends RadialGeometry {
             if (t1 > 0 && t2 > 0) {
                 Point p1 = ray.getPoint(t1);
                 Point p2 = ray.getPoint(t2);
-                return List.of(new GeoPoint(this,p1), new GeoPoint(this, p2));
+                return List.of(new GeoPoint(this, p1), new GeoPoint(this, p2));
             } else if (t1 > 0) {
                 Point p1 = ray.getPoint(t1);
-                return List.of(new GeoPoint(this,p1));
+                return List.of(new GeoPoint(this, p1));
             } else if (t2 > 0) {
                 Point p2 = ray.getPoint(t2);
-                return List.of(new GeoPoint(this,p2));
+                return List.of(new GeoPoint(this, p2));
             }
         }
         return null;

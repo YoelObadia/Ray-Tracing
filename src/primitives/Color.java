@@ -10,25 +10,22 @@ package primitives;
  */
 public class Color {
     /**
-     * The internal fields maintain RGB components as double numbers from 0 to
-     * whatever...
-     */
-    private final Double3 rgb;
-
-    /**
      * Black color = (0,0,0)
      */
     public static final Color BLACK = new Color();
-
     /**
      * Yellow color used for the imageWriterTest
      */
     public static Color YELLOW = new Color(java.awt.Color.YELLOW);
-
     /**
      * Red color used for the imageWriterTest
      */
     public static Color RED = new Color(java.awt.Color.RED);
+    /**
+     * The internal fields maintain RGB components as double numbers from 0 to
+     * whatever...
+     */
+    private final Double3 rgb;
 
     /**
      * Default constructor - to generate Black Color (privately)
@@ -48,7 +45,7 @@ public class Color {
      */
     public Color(double r, double g, double b) {
         if (r < 0 || g < 0 || b < 0)
-           throw new IllegalArgumentException("Negative color component is illegal");
+            throw new IllegalArgumentException("Negative color component is illegal");
         rgb = new Double3(r, g, b);
     }
 
@@ -125,7 +122,7 @@ public class Color {
      */
     public Color scale(double k) {
         if (k < 0.0)
-           throw new IllegalArgumentException("Can't scale a color by a negative number");
+            throw new IllegalArgumentException("Can't scale a color by a negative number");
         return new Color(rgb.scale(k));
     }
 
@@ -137,7 +134,7 @@ public class Color {
      */
     public Color reduce(double k) {
         if (k < 1)
-           throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
+            throw new IllegalArgumentException("Can't scale a color by a by a number lower than 1");
         return new Color(rgb.reduce(k));
     }
 

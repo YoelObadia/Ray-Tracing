@@ -1,7 +1,9 @@
 package primitives;
 
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Testing Point
@@ -27,7 +29,7 @@ class PointTest {
     void testAdd() {
         Point p1 = new Point(1, 2, 3);
         assertEquals(
-                new Point(0,0,0),
+                new Point(0, 0, 0),
                 p1.add(new Vector(-1, -2, -3)),
                 "ERROR: Point + Vector does not work correctly"
         );

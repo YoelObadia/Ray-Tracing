@@ -1,6 +1,7 @@
 package renderer;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Ray;
 import scene.Scene;
 
 /**
@@ -16,6 +17,7 @@ public abstract class RayTracerBase {
 
     /**
      * Constructor of RayTracerBase with 1 parameter
+     *
      * @param scene parameter
      */
     public RayTracerBase(Scene scene) {
@@ -24,6 +26,7 @@ public abstract class RayTracerBase {
 
     /**
      * State the method of scanning rays through the scene
+     *
      * @param ray through the scene
      * @return Color
      */

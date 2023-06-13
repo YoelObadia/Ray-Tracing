@@ -1,11 +1,14 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Double3;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * Class PointLight used in the case of PointLight
  */
-public class PointLight extends Light implements LightSource{
+public class PointLight extends Light implements LightSource {
 
     /**
      * Field position
@@ -15,21 +18,22 @@ public class PointLight extends Light implements LightSource{
     /**
      * Field kC
      */
-    private double kC = 1d;
+    private Double3 kC = Double3.ONE;
     /**
      * Field kL
      */
-    private double kL = 0d;
+    private Double3 kL = Double3.ZERO;
 
     /**
      * Field kQ
      */
-    private double kQ = 0d;
+    private Double3 kQ = Double3.ZERO;
 
     /**
      * Constructor of Light with 2 parameters
+     *
      * @param intensity Color for light source
-     * @param position Point from the vector
+     * @param position  Point from the vector
      */
     public PointLight(Color intensity, Point position) {
         super(intensity);
@@ -38,27 +42,32 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Getter of the intensity in case of PointLight
+     *
      * @param p point
      * @return Color
      */
     @Override
     public Color getIntensity(Point p) {
 
-        double factor = kC;
+        Double3 factor;
         double distance;
 
         try {
             distance = position.distance(p);
-            factor += kL * distance + kQ * distance * distance;
+            factor = kC
+                    .add(kL.scale(distance))
+                    .add(kQ.scale(distance * distance));
         } catch (Exception e) {
-            return null;
+            return Color.BLACK;
         }
+        Color baseIntensity = getIntensity();
 
-        return getIntensity().scale(1 / factor);
+        return baseIntensity.reduce(factor);
     }
 
     /**
      * Getter of the direction vector in case of PointLight
+     *
      * @param p point
      * @return Vector
      */
@@ -74,6 +83,7 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Implementation of the function getDistance
+     *
      * @param point Point
      * @return the distance between pointLight and point
      */
@@ -84,27 +94,49 @@ public class PointLight extends Light implements LightSource{
 
     /**
      * Setter for coefficient kC
+     *
      * @param kC double
      */
     public PointLight setkC(double kC) {
+        this.kC = new Double3(kC);
+        return this;
+    }
+    public PointLight setkC(Double3 kC) {
         this.kC = kC;
         return this;
     }
 
     /**
      * Setter for coefficient kL
+     *
      * @param kL double
      */
     public PointLight setKl(double kL) {
+        this.kL = new Double3(kL);
+        return this;
+    }
+
+    public PointLight setKl(Double3 kL) {
         this.kL = kL;
         return this;
     }
 
     /**
      * Setter for coefficient kQ
+     *
      * @param kQ double
      */
     public PointLight setKq(double kQ) {
+        this.kQ = new Double3(kQ);
+        return this;
+    }
+
+    /**
+     * Setter for coefficient kQ
+     *
+     * @param kQ double
+     */
+    public PointLight setKq(Double3 kQ) {
         this.kQ = kQ;
         return this;
     }

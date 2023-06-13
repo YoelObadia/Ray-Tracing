@@ -19,6 +19,7 @@ public class Cylinder extends Tube {
 
     /**
      * Constructor of Cylinder with 1 parameter and super from Tube
+     *
      * @param height that is the length of the cylinder
      */
     public Cylinder(Ray axisRay, double radius, double height) {
@@ -28,6 +29,7 @@ public class Cylinder extends Tube {
 
     /**
      * Getter for the field height
+     *
      * @return height of the cylinder
      */
     public double getHeight() {
@@ -36,6 +38,7 @@ public class Cylinder extends Tube {
 
     /**
      * Use of the function getNormal of the interface Geometry
+     *
      * @param point that is the point on the geometry
      * @return vector normal
      */
@@ -63,6 +66,7 @@ public class Cylinder extends Tube {
 
     /**
      * Use of the function findIntsersections from the interface intersectable
+     *
      * @param ray that allow us to know if there are intersections
      * @return list of intersections points
      */

@@ -23,6 +23,7 @@ public class Material {
 
     /**
      * Setter for coefficient kD
+     *
      * @param kD Double3
      * @return this
      */
@@ -33,6 +34,7 @@ public class Material {
 
     /**
      * Setter for coefficient kD
+     *
      * @param kD double
      * @return this
      */
@@ -43,6 +45,7 @@ public class Material {
 
     /**
      * Setter for coefficient kS
+     *
      * @param kS Double3
      * @return this
      */
@@ -53,6 +56,7 @@ public class Material {
 
     /**
      * Setter for coefficient kS
+     *
      * @param kS double
      * @return this
      */
@@ -63,6 +67,7 @@ public class Material {
 
     /**
      * Setter for coefficient nShininess
+     *
      * @param nShininess int
      * @return this
      */

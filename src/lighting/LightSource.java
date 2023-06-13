@@ -1,6 +1,8 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * Interface LightSource created for external light sources.
@@ -12,6 +14,7 @@ public interface LightSource {
 
     /**
      * Getter of intensity color
+     *
      * @param p point
      * @return Color
      */
@@ -19,6 +22,7 @@ public interface LightSource {
 
     /**
      * Getter of vector l
+     *
      * @param p point
      * @return Vector
      */
@@ -26,6 +30,7 @@ public interface LightSource {
 
     /**
      * Definition of the function getDistance
+     *
      * @param point Point
      * @return distance
      */

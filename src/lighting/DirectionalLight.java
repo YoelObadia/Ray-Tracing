@@ -1,6 +1,8 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
+import primitives.Point;
+import primitives.Vector;
 
 /**
  * Class DirectionalLight used in the case of directional light
@@ -14,6 +16,7 @@ public class DirectionalLight extends Light implements LightSource {
 
     /**
      * Constructor of Light with 2 parameter
+     *
      * @param intensity Color for light source
      * @param direction Direction Vector
      */
@@ -24,6 +27,7 @@ public class DirectionalLight extends Light implements LightSource {
 
     /**
      * Getter for the intensity of the DirectionalLight
+     *
      * @param p point
      * @return Color
      */
@@ -34,16 +38,18 @@ public class DirectionalLight extends Light implements LightSource {
 
     /**
      * Getter for the direction vector of the DirectionalLight
+     *
      * @param p point
      * @return Vector
      */
     @Override
     public Vector getL(Point p) {
-        return direction;
+        return direction.normalize();
     }
 
     /**
      * Implementation of the function getDistance
+     *
      * @param point Point
      * @return Double.POSITIVE_INFINITY
      */

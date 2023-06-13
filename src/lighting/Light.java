@@ -1,19 +1,20 @@
 package lighting;
 
-import primitives.*;
+import primitives.Color;
 
 /**
  * Abstract class Light without access permission
  */
-abstract class Light {
+ abstract class Light {
 
     /**
      * Field intensity for intensity of light source
      */
-    private Color intensity;
+    private final Color intensity;
 
     /**
      * Protected constructor of Light with 1 parameter
+     *
      * @param intensity Color for light source
      */
     protected Light(Color intensity) {
@@ -22,6 +23,7 @@ abstract class Light {
 
     /**
      * Getter for intensity
+     *
      * @return Color
      */
     public Color getIntensity() {

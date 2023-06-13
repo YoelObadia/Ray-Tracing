@@ -18,23 +18,23 @@ class ImageWriterTest {
         ImageWriter imageWriter = new ImageWriter("imageWriterTest", 800, 500);
 
         // All the image is colored in yellow
-        for(int i = 0; i < 800; i++) {
+        for (int i = 0; i < 800; i++) {
             for (int j = 0; j < 500; j++) {
                 imageWriter.writePixel(i, j, Color.YELLOW);
             }
         }
 
         // The rows are colored in red for to see the pixels
-        for(int row = 0; row < 16; row++) {
-            for(int j = 0; j < 500; j++) {
-                imageWriter.writePixel(row*50, j, Color.RED);
+        for (int row = 0; row < 16; row++) {
+            for (int j = 0; j < 500; j++) {
+                imageWriter.writePixel(row * 50, j, Color.RED);
             }
         }
 
         // The columns are colored in red for to see the pixels
-        for(int col = 0; col < 10; col++) {
-            for(int j = 0; j < 800; j++) {
-                imageWriter.writePixel(j, col*50, Color.RED);
+        for (int col = 0; col < 10; col++) {
+            for (int j = 0; j < 800; j++) {
+                imageWriter.writePixel(j, col * 50, Color.RED);
             }
         }
 

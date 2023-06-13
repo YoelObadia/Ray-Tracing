@@ -1,8 +1,13 @@
 package geometries;
 
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
+
 import java.util.List;
-import static primitives.Util.*;
+
+import static primitives.Util.alignZero;
+import static primitives.Util.isZero;
 
 /**
  * Class Plane that contains 2 fields: point and vector
@@ -22,6 +27,7 @@ public class Plane extends Geometry {
 
     /**
      * Constructor of the plane
+     *
      * @param q0     point on the plane
      * @param normal vector normal of the plane
      */
@@ -33,6 +39,7 @@ public class Plane extends Geometry {
     /**
      * Constructor of Plane with 3 Points in parameters for to calculate
      * the normal with the same formula that triangle
+     *
      * @param p1 first point of the plane
      * @param p2 second point of the plane
      * @param p3 third point of the plane
@@ -51,6 +58,7 @@ public class Plane extends Geometry {
 
     /**
      * Getter for the field q0
+     *
      * @return point q0 of the plane
      */
     public Point getQ0() {
@@ -59,6 +67,7 @@ public class Plane extends Geometry {
 
     /**
      * Function getNormal without parameter
+     *
      * @return vector normal
      */
     public Vector getNormal() {
@@ -67,6 +76,7 @@ public class Plane extends Geometry {
 
     /**
      * Use of the function getNormal of the interface Geometry
+     *
      * @param point that is the point on the geometry
      * @return vector normal
      */
@@ -77,6 +87,7 @@ public class Plane extends Geometry {
 
     /**
      * Use of the function findIntersections from the interface intersectable
+     *
      * @param ray that allow us to know if there are intersections
      * @return list of intersections points
      */
@@ -147,7 +158,7 @@ public class Plane extends Geometry {
 
         double t = alignZero(nP0Q0 / nv);
 
-        if(t<=0)
+        if (t <= 0)
             return null;
 
         Point point = ray.getPoint(t);

@@ -1,9 +1,12 @@
 package renderer;
 
-import lighting.LightSource;
-import primitives.*;
-import scene.Scene;
 import geometries.Intersectable.GeoPoint;
+import lighting.LightSource;
+import primitives.Color;
+import primitives.Double3;
+import primitives.Ray;
+import primitives.Vector;
+import scene.Scene;
 
 import java.util.List;
 
@@ -12,16 +15,13 @@ import static primitives.Util.alignZero;
 /**
  * Class RayTracerBasic inherit from the abstract class RayTracerBse
  */
-public class RayTracerBasic extends RayTracerBase{
+public class RayTracerBasic extends RayTracerBase {
 
-    /**
-     * Field fixed for ray head offset size for shading rays
-     */
-    private static final double DELTA = 0.1;
 
     /**
      * Constructor of RayTracerBasic that use the constructor
      * of the father class RayTracerBase
+     *
      * @param scene parameter
      */
     public RayTracerBasic(Scene scene) {
@@ -33,6 +33,7 @@ public class RayTracerBasic extends RayTracerBase{
      * If a geometry is founded, so the closest GeoPoint is searched.
      * After this, the GeoPoint is colored.
      * If there aren't intersections, the color is background (BLACK) by default
+     *
      * @param ray through the scene
      * @return Color
      */
@@ -50,7 +51,8 @@ public class RayTracerBasic extends RayTracerBase{
      * Helper function for the color.
      * Call the helper function CalcLocalEffects()
      * to give all the effects of the different lights sources
-     * @param gp parameter
+     *
+     * @param gp  parameter
      * @param ray parameter
      * @return Color
      */
@@ -62,8 +64,9 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * Helper function for the color from the theory presentation
+     *
      * @param geoPoint GeoPoint
-     * @param ray Ray
+     * @param ray      Ray
      * @return Color
      */
     private Color calcLocalEffects(GeoPoint geoPoint, Ray ray) {
@@ -99,20 +102,20 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * Helper function that return the diffusion from the theory presentation
-     * @param kd coefficient
-     * @param l vector
-     * @param n vector
+     *
+     * @param kd             coefficient
+     * @param l              vector
+     * @param n              vector
      * @param lightIntensity color
      * @return Color
      */
-    private Color calcDiffusive(Double3 kd, Vector l, Vector n, Color lightIntensity){
+    private Color calcDiffusive(Double3 kd, Vector l, Vector n, Color lightIntensity) {
 
         double lN;
 
         try {
             lN = l.normalize().dotProduct(n.normalize());
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             return lightIntensity.scale(0);
         }
 
@@ -121,11 +124,12 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * Helper function to return specular from the theory presentation
-     * @param ks coefficient
-     * @param l vector
-     * @param n vector
-     * @param v vector
-     * @param nShininess double
+     *
+     * @param ks             coefficient
+     * @param l              vector
+     * @param n              vector
+     * @param v              vector
+     * @param nShininess     double
      * @param lightIntensity color
      * @return Color
      */
@@ -137,8 +141,7 @@ public class RayTracerBasic extends RayTracerBase{
 
         try {
             vR = v.scale(-1).normalize().dotProduct(r.normalize());
-        }
-        catch (Exception exception) {
+        } catch (Exception exception) {
             return lightIntensity.scale(1);
         }
 
@@ -147,32 +150,34 @@ public class RayTracerBasic extends RayTracerBase{
 
     /**
      * A method of checking non-shading between a point and the light source
-     * @param gp GeoPoint
+     *
+     * @param gp    GeoPoint
      * @param light LightSource
-     * @param l Vector
-     * @param n Vector
-     * @param nl double
+     * @param l     Vector
+     * @param n     Vector
+     * @param nl    double
      * @return Boolean value
      */
     private boolean unshaded(GeoPoint gp, LightSource light, Vector l, Vector n, double nl) {
 
         // from point to light source
         Vector lightDirection = l.scale(-1);
-        Vector deltaVector = n.scale(nl < 0 ? DELTA : -DELTA);
-        Point point = gp.point.add(deltaVector);
-        Ray lightRay = new Ray(point, lightDirection);
+        Ray lightRay = new Ray(gp.point, lightDirection, n);
+
 
         // This list contains the shadow ray intersections
         List<GeoPoint> intersections = scene.geometries.findGeoIntsersections(lightRay);
 
-        if (intersections.size() == 0)
+        if (intersections == null || intersections.size() == 0)
             return true;
 
         // if there are points in the intersections list
         // that are closer to the point than light source
-        for (GeoPoint geoPoint: intersections) {
-            if(lightRay.getP0().distance(geoPoint.point) < light.getDistance(geoPoint.point))
-                return false;
+        double maxDistance = light.getDistance(gp.point);
+
+        for (var elem :intersections) {
+            if(elem.point.distance(gp.point) < maxDistance)
+                return  false;
         }
 
         return true;

@@ -1,11 +1,14 @@
 package geometries;
 
 import org.junit.jupiter.api.Test;
-import primitives.*;
+import primitives.Point;
+import primitives.Ray;
+import primitives.Vector;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Testing Triangle
@@ -43,7 +46,7 @@ class TriangleTest {
         // TC02: Against edge
         ray = new Ray(new Point(0, 0, -1), new Vector(1, 1, 0));
         assertEquals(List.of(new Point(1, 1, -1)), pl.findIntsersections(ray), "Wrong intersection with plane");
-        assertNull(tr.findIntsersections(ray),"Bad intersection");
+        assertNull(tr.findIntsersections(ray), "Bad intersection");
 
         // TC03: Against vertex
         ray = new Ray(new Point(0, 0, 2), new Vector(-1, -1, 0));
