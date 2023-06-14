@@ -38,8 +38,8 @@ public class Ray {
     }
 
     public Ray(Point point, Vector dir, Vector n) {
-        double ndir = n.dotProduct(dir);
-        Vector deltaVector = n.scale(ndir > 0 ? DELTA : -DELTA);
+        double nDir = n.dotProduct(dir);
+        Vector deltaVector = n.scale(nDir > 0 ? DELTA : -DELTA);
 
         this.p0 = point.add(deltaVector);
         this.dir = dir.normalize();
