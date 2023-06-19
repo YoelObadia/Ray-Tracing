@@ -8,9 +8,10 @@ import java.util.Objects;
 import static primitives.Util.isZero;
 
 /**
- * This class will serve to use
+ * This class will serve to use rays
  */
 public class Ray {
+
     /**
      * Field fixed for ray head offset size for shading rays
      */
@@ -37,12 +38,20 @@ public class Ray {
         this.dir = dir.normalize();
     }
 
+    /**
+     * Constructor for ray deflected by DELTA
+     *
+     * @param point origin
+     * @param n     normal vector
+     * @param dir   direction
+     */
     public Ray(Point point, Vector dir, Vector n) {
-        double nDir = n.dotProduct(dir);
-        Vector deltaVector = n.scale(nDir > 0 ? DELTA : -DELTA);
-
-        this.p0 = point.add(deltaVector);
         this.dir = dir.normalize();
+        double nv = n.dotProduct(this.dir);
+        Vector delta = n.scale(DELTA);
+        if (nv < 0)
+            delta = delta.scale(-1);
+        this.p0 = point.add(delta);
 
     }
 

@@ -5,14 +5,17 @@ package primitives;
  * In order to save the parameters of the Fong light reflection model.
  */
 public class Material {
+
     /**
      * Field coefficient Kt for transparency
      */
     public Double3 kT=Double3.ZERO;
+
     /**
      * Field coefficient Kr for reflection
      */
     public Double3 kR=Double3.ZERO;
+
     /**
      * Field coefficient kD
      */
@@ -114,5 +117,45 @@ public class Material {
     public Material setKr(double kR) {
         this.kR = new Double3(kR);
         return this;
+    }
+
+    /**
+     * Getter for the coefficient KT
+     * @return kT
+     */
+    public Double3 getKt() {
+        return kT;
+    }
+
+    /**
+     * Getter for the coefficient KR
+     * @return kR
+     */
+    public Double3 getKr() {
+        return kR;
+    }
+
+    /**
+     * Getter for the coefficient KD
+     * @return kD
+     */
+    public Double3 getKd() {
+        return kD;
+    }
+
+    /**
+     * Getter for the coefficient KS
+     * @return kS
+     */
+    public Double3 getKs() {
+        return kS;
+    }
+
+    /**
+     * Getter for the coefficient nShininess
+     * @return nShininess
+     */
+    public int getNShininess() {
+        return nShininess;
     }
 }

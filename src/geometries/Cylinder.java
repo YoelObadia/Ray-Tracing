@@ -17,12 +17,13 @@ public class Cylinder extends Tube {
      */
     private final double height;
 
+
     /**
      * Constructor of Cylinder with 1 parameter and super from Tube
      *
      * @param height that is the length of the cylinder
      */
-    public Cylinder(Ray axisRay, double radius, double height) {
+    public Cylinder(double radius, Ray axisRay, double height) {
         super(axisRay, radius);
         this.height = height;
     }
@@ -71,72 +72,58 @@ public class Cylinder extends Tube {
      * @return list of intersections points
      */
     @Override
-    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
-
-        List<GeoPoint> result = new LinkedList<>();
-        Vector va = this.axisRay.getDir();
-        Point p1 = this.axisRay.getP0();
-        Point p2 = p1.add(this.axisRay.getDir().scale(this.height));
-
-        // Get plane of bottom base
-        Plane plane1 = new Plane(p1, this.axisRay.getDir());
-        // Intersections with bottom's plane
-        List<GeoPoint> result2 = plane1.findGeoIntsersections(ray);
-
-        if (result2 != null) {
-            // Add all intersections of bottom's plane that are in the base's bounders
-            for (GeoPoint geoPoint : result2) {
-                // To avoid vector ZERO
-                if (geoPoint.point.equals(p1)) {
-                    result.add(new GeoPoint(this, p1));
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray, double maxDistance) {
+        List<GeoPoint> intersections = super.findGeoIntsersectionsHelper(ray, maxDistance);
+        Point p0 = axisRay.getP0();
+        Vector dir = axisRay.getDir();
+        if (intersections != null) {
+            List<GeoPoint> temp = new LinkedList<>();
+            for (GeoPoint g : intersections) {
+                double pointHeight = alignZero(g.point.subtract(p0).dotProduct(dir));
+                if (pointHeight > 0 && pointHeight < height) {
+                    temp.add(g);
                 }
-                // Formula that checks that point is inside the base
-                else if ((
-                        geoPoint.point.subtract(p1).dotProduct(geoPoint.point.subtract(p1)) <
-                                this.radius * this.radius
-                )) {
-                    result.add(geoPoint);
+            }
+            if (temp.isEmpty())
+                intersections = null;
+            else
+                intersections = temp;
+        }
+
+        List<GeoPoint> planeIntersection = new Plane(p0, dir).findGeoIntsersections(ray, maxDistance);
+        if (planeIntersection != null) {
+            GeoPoint point = planeIntersection.get(0);
+            if (point.point.equals(p0) ||
+                    alignZero(point.point.subtract(p0).lengthSquared() - radius * radius) < 0) {
+                if (intersections == null) {
+                    intersections = new LinkedList<>();
                 }
+                point.geometry = this;
+                intersections.add(point);
             }
         }
 
-        // Get intersections for tube
-        List<GeoPoint> result1 = super.findGeoIntsersectionsHelper(ray);
+        Point p1 = p0.add(dir.scale(height));
 
-        if (result1 != null) {
-            // Add all intersections of tube that are in the cylinder's bounders
-            for (GeoPoint geoPoint : result1) {
-                if (va.dotProduct(geoPoint.point.subtract(p1)) > 0
-                        && va.dotProduct(geoPoint.point.subtract(p2)) < 0) {
-                    result.add(geoPoint);
+        planeIntersection = new Plane(p1, dir).findGeoIntsersections(ray, maxDistance);
+        if (planeIntersection != null) {
+            GeoPoint point = planeIntersection.get(0);
+            if (point.point.equals(p1) ||
+                    alignZero(point.point.subtract(p1).lengthSquared() - radius * radius) < 0) {
+                if (intersections == null) {
+                    intersections = new LinkedList<>();
                 }
+                point.geometry = this;
+                intersections.add(point);
             }
         }
 
-        // Get plane of top base
-        Plane plane2 = new Plane(p2, this.axisRay.getDir());
-        // Intersections with top's plane
-        List<GeoPoint> result3 = plane2.findGeoIntsersections(ray);
-
-        if (result3 != null) {
-            for (GeoPoint geoPoint : result3) {
-                // To avoid vector ZERO
-                if (geoPoint.point.equals(p2)) {
-                    result.add(new GeoPoint(this, p2));
-                }
-                // Formula that checks that point is inside the base
-                else if ((
-                        geoPoint.point.subtract(p2).dotProduct(geoPoint.point.subtract(p2)) <
-                                this.radius * this.radius
-                )) {
-                    result.add(geoPoint);
-                }
+        if (intersections != null) {
+            for (GeoPoint g : intersections) {
+                g.geometry = this;
             }
         }
 
-        if (result.size() > 0)
-            return result;
-
-        return null;
+        return intersections;
     }
 }

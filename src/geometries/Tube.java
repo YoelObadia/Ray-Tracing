@@ -86,113 +86,127 @@ public class Tube extends RadialGeometry {
     }
 
     /**
-     * Use of the function findIntersections from the interface intersectable
-     *
-     * @param ray that allow us to know if there are intersections
-     * @return list of intersections points
+     * Use of the function findGeoIntsersectionsHelper
+     * @param ray         the ray crossing the geometric object
+     * @param maxDistance max distance for finding intersections
+     * @return List of intersection points
+     * @author Dan
+     * {@see <a href="https://mrl.cs.nyu.edu/~dzorin/rendering/lectures/lecture3/lecture3.pdf"></a>}
      */
     @Override
-    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
+    protected List<GeoPoint> findGeoIntsersectionsHelper(Ray ray, double maxDistance) {
 
-        /*
-            The equation for a tube of radius r oriented along a line pa + vat:
-            (q - pa - (va,q - pa)va)2 - r2 = 0
-            get intersections using formula : (p - pa + vt - (va,p - pa + vt)va)^2 - r^2 = 0
-            reduces to at^2 + bt + c = 0
-            with a = (v - (v,va)va)^2
-                 b = 2 * (v - (v,va)va,∆p - (∆p,va)va)
-                 c = (∆p - (∆p,va)va)^2 - r^2
-            where  ∆p = p - pa
-        */
-
+        Vector vAxis = axisRay.getDir();
         Vector v = ray.getDir();
-        Vector va = this.getAxisRay().getDir();
+        Point p0 = ray.getP0();
 
-        // If vectors are parallel then there is no intersections possible
-        if (v.normalize().equals(va.normalize()))
-            return null;
+        // At^2+Bt+C=0
+        double a = 0;
+        double b = 0;
+        double c = 0;
 
-        // Use of calculated variables to avoid vector ZERO
-        double vva;
-        double pva;
-        double a;
-        double b;
-        double c;
+        double vVa = alignZero(v.dotProduct(vAxis));
+        Vector vVaVa;
+        Vector vMinusVVaVa;
 
-        // Check every variable to avoid ZERO vector
-        if (ray.getP0().equals(this.axisRay.getP0())) {
-            vva = v.dotProduct(va);
+        if (vVa == 0) // the ray is orthogonal to the axis
+            vMinusVVaVa = v;
 
-            if (vva == 0) {
-                a = v.dotProduct(v);
-            } else {
-                a = (v.subtract(va.scale(vva))).dotProduct(v.subtract(va.scale(vva)));
-            }
+        else {
+            vVaVa = vAxis.scale(vVa);
 
-            b = 0;
-            c = -radius * radius;
-        } else {
-
-            Vector deltaP = ray.getP0().subtract(this.axisRay.getP0());
-            vva = v.dotProduct(va);
-            pva = deltaP.dotProduct(va);
-
-            if (vva == 0 && pva == 0) {
-                a = v.dotProduct(v);
-                b = 2 * v.dotProduct(deltaP);
-                c = deltaP.dotProduct(deltaP) - radius * radius;
-            } else if (vva == 0) {
-                a = v.dotProduct(v);
-                if (deltaP.equals(va.scale(deltaP.dotProduct(va)))) {
-                    b = 0;
-                    c = -radius * radius;
-                } else {
-                    b = 2 * v.dotProduct(deltaP.subtract(va.scale(deltaP.dotProduct(va))));
-                    c = (deltaP.subtract(va.scale(deltaP.dotProduct(va)))
-                            .dotProduct(deltaP.subtract(va.scale(deltaP.dotProduct(va))))) -
-                            this.radius * this.radius;
-                }
-            } else if (pva == 0) {
-                a = (v.subtract(va.scale(vva))).dotProduct(v.subtract(va.scale(vva)));
-                b = 2 * v.subtract(va.scale(vva)).dotProduct(deltaP);
-                c = (deltaP.dotProduct(deltaP)) - this.radius * this.radius;
-            } else {
-                a = (v.subtract(va.scale(vva))).dotProduct(v.subtract(va.scale(vva)));
-                if (deltaP.equals(va.scale(deltaP.dotProduct(va)))) {
-                    b = 0;
-                    c = -radius * radius;
-                } else {
-                    b = 2 * v.subtract(va.scale(vva)).
-                            dotProduct(deltaP.subtract(va.scale(deltaP.dotProduct(va))));
-                    c = (deltaP.subtract(va.scale(deltaP.dotProduct(va)))
-                            .dotProduct(deltaP.subtract(va.scale(deltaP.dotProduct(va))))) -
-                            this.radius * this.radius;
-                }
+            try {
+                vMinusVVaVa = v.subtract(vVaVa);
+            } catch (IllegalArgumentException e1) { // the rays is parallel to axis
+                return null;
             }
         }
 
-        // Calculate delta for result of equation
-        double delta = b * b - 4 * a * c;
+        // A = (v-(v*va)*va)^2
+        a = vMinusVVaVa.lengthSquared();
 
-        // No intersections point
-        if (delta <= 0) {
-            return null;
-        } else {
-            // Calculate points taking only those with t > 0
-            double t1 = alignZero((-b - Math.sqrt(delta)) / (2 * a));
-            double t2 = alignZero((-b + Math.sqrt(delta)) / (2 * a));
-            if (t1 > 0 && t2 > 0) {
-                Point p1 = ray.getPoint(t1);
-                Point p2 = ray.getPoint(t2);
-                return List.of(new GeoPoint(this, p1), new GeoPoint(this, p2));
-            } else if (t1 > 0) {
-                Point p1 = ray.getPoint(t1);
-                return List.of(new GeoPoint(this, p1));
-            } else if (t2 > 0) {
-                Point p2 = ray.getPoint(t2);
-                return List.of(new GeoPoint(this, p2));
+        Vector deltaP = null;
+
+        try {
+            deltaP = p0.subtract(axisRay.getP0());
+        }
+            // the ray begins at axis P0
+            catch (IllegalArgumentException e1) {
+
+            // the ray is orthogonal to Axis
+            if (vVa == 0 && alignZero(radius - maxDistance) <= 0) {
+                return List.of(new GeoPoint(this, ray.getPoint(radius)));
+            }
+
+            double t = alignZero(Math.sqrt(radius * radius / vMinusVVaVa.lengthSquared()));
+
+            return alignZero(t - maxDistance) >= 0 ?
+                    null :
+                    List.of(new GeoPoint(this, ray.getPoint(t)));
+        }
+
+        double dPVAxis = alignZero(deltaP.dotProduct(vAxis));
+        Vector dPVaVa;
+        Vector dPMinusdPVaVa;
+
+        if (dPVAxis == 0)
+            dPMinusdPVaVa = deltaP;
+
+        else {
+            dPVaVa = vAxis.scale(dPVAxis);
+
+            try {
+                dPMinusdPVaVa = deltaP.subtract(dPVaVa);
+            } catch (IllegalArgumentException e1) {
+
+                double t = alignZero(Math.sqrt(radius * radius / a));
+
+                return alignZero(t - maxDistance) >= 0 ?
+                        null :
+                        List.of(new GeoPoint(this, ray.getPoint(t)));
             }
         }
+
+        // B = 2(v - (v*va)*va) * (dp - (dp*va)*va))
+        b = 2 * alignZero(vMinusVVaVa.dotProduct(dPMinusdPVaVa));
+        c = dPMinusdPVaVa.lengthSquared() - radius * radius;
+
+        // A*t^2 + B*t + C = 0 - lets resolve it
+        double discr = alignZero(b * b - 4 * a * c);
+
+        // the ray is outside or tangent to the tube
+        if (discr <= 0) return null;
+
+        double doubleA = 2 * a;
+        double tm = alignZero(-b / doubleA);
+        double th = Math.sqrt(discr) / doubleA;
+
+        // the ray is tangent to the tube
+        if (isZero(th))
+            return null;
+
+        double t1 = alignZero(tm + th);
+
+        // t1 is behind the head
+        if (t1 <= 0)
+            return null; // since th must be positive (sqrt), t2 must be non-positive as t1
+
+        double t2 = alignZero(tm - th);
+
+        // if both t1 and t2 are positive
+        if (t2 > 0 && alignZero(t2 - maxDistance) < 0)
+
+            return List.of(
+                    new GeoPoint(
+                            this, ray.getPoint(t1)),
+                    new GeoPoint(
+                            this, ray.getPoint(t2))
+            );
+
+            // t2 is behind the head
+        else if (alignZero(t1 - maxDistance) < 0)
+            return List.of(new GeoPoint(this, ray.getPoint(t1)));
+
         return null;
     }
 }

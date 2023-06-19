@@ -24,8 +24,8 @@ class CylinderTest {
         // TC01: There is a simple single test here
 
         Cylinder cylinder = new Cylinder(
-                new Ray(new Point(1, 1, 1), new Vector(1, 1, 1)),
                 2,
+                new Ray(new Point(1, 1, 1), new Vector(1, 1, 1)),
                 10
         );
         assertEquals(
@@ -41,7 +41,7 @@ class CylinderTest {
     @Test
     void testFindIntsersections() {
 
-        Cylinder cylinder = new Cylinder(new Ray(new Point(2, 0, 0), new Vector(0, 0, 1)), 1d, 2d);
+        Cylinder cylinder = new Cylinder(1d, new Ray(new Point(2, 0, 0), new Vector(0, 0, 1)), 2d);
 
         // ============ Equivalence Partitions Tests ==============
 
@@ -91,7 +91,7 @@ class CylinderTest {
                 "Wrong number of points"
         );
         assertEquals(
-                List.of(new Point(1, 0, 0.5), new Point(3, 0, 0.5)),
+                List.of(new Point(3, 0, 0.5), new Point(1, 0, 0.5)),
                 result,
                 "Bad intersection points"
         );
@@ -127,7 +127,7 @@ class CylinderTest {
                 "Wrong number of points"
         );
         assertEquals(
-                List.of(new Point(2, 0, 0), new Point(3, 0, 1)),
+                List.of(new Point(3, 0, 1), new Point(2, 0, 0)),
                 result,
                 "Bad intersection points"
         );
@@ -141,7 +141,7 @@ class CylinderTest {
                 "Wrong number of points"
         );
         assertEquals(
-                List.of(new Point(2, 0, 0), new Point(3, 0, 1)),
+                List.of(new Point(3, 0, 1), new Point(2, 0, 0)),
                 result,
                 "Bad intersection points"
         );
@@ -188,7 +188,7 @@ class CylinderTest {
                 "Wrong number of points"
         );
         assertEquals(
-                List.of(new Point(1, 0, 0.5), new Point(3, 0, 0.5)),
+                List.of(new Point(3, 0, 0.5), new Point(1, 0, 0.5)),
                 result,
                 "Bad intersection points"
         );

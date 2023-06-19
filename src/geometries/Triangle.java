@@ -27,7 +27,7 @@ public class Triangle extends Polygon {
      * @return list of intersections
      */
     @Override
-    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray, double maxDistance) {
 
         Point p = ray.getP0();
         Vector v = ray.getDir();
@@ -54,7 +54,7 @@ public class Triangle extends Polygon {
             // I used stream because if I return just plane.findGeoIntersections() it doesn't work
             // for the multicolor test and the color of triangles doesn't appear
 
-            if (plane.findGeoIntsersections(ray) == null)
+            if (plane.findGeoIntsersections(ray, maxDistance) == null)
                 return null;
             //return plane.findGeoIntsersections(ray);
             return (plane.findIntsersections(ray)).stream()

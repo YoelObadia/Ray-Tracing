@@ -1,11 +1,8 @@
 package scene;
-/*shimon*/
 
 import geometries.Geometries;
-import lighting.AmbientLight;
-import lighting.LightSource;
+import lighting.*;
 import primitives.Color;
-
 import java.util.LinkedList;
 import java.util.List;
 

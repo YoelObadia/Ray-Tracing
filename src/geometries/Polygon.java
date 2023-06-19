@@ -106,7 +106,7 @@ public class Polygon extends Geometry {
      * @return list of intersections points
      */
     @Override
-    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray) {
+    public List<GeoPoint> findGeoIntsersectionsHelper(Ray ray, double maxDistance) {
 
         // First ,we check if the plane of our polygon intersects with the ray,
         // if there's no intersection with the
@@ -130,40 +130,45 @@ public class Polygon extends Geometry {
         // The polygon, which is done by checking that P is
         // to the same side of each line made by the points.
 
-        var intersections = plane.findIntsersections(ray);
+        List<GeoPoint> planeIntersections = plane.findGeoIntsersections(ray);
 
-        if (intersections == null)
+        if (planeIntersections == null) {
             return null;
+        }
 
-        Point p0 = ray.getP0();
+        Point P0 = ray.getP0();
         Vector v = ray.getDir();
 
-        Vector v1 = vertices.get(1).subtract(p0);
-        Vector v2 = vertices.get(0).subtract(p0);
+        Point P1 = vertices.get(1);
+        Point P2 = vertices.get(0);
 
-        double sign = v.dotProduct(v1.crossProduct(v2));
+        Vector v1 = P0.subtract(P1);
+        Vector v2 = P0.subtract(P2);
 
-        if (isZero(sign))
+        double sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
+
+        if (isZero(sign)) {
             return null;
+        }
 
         boolean positive = sign > 0;
 
+        //iterate through all vertices of the polygon
         for (int i = vertices.size() - 1; i > 0; --i) {
             v1 = v2;
-            v2 = vertices.get(i).subtract(p0);
+            v2 = P0.subtract(vertices.get(i));
+
             sign = alignZero(v.dotProduct(v1.crossProduct(v2)));
-
-            if (isZero(sign))
+            if (isZero(sign)) {
                 return null;
+            }
 
-            if (positive != (sign > 0))
+            if (positive != (sign > 0)) {
                 return null;
+            }
         }
+        Point point = planeIntersections.get(0).point;
 
-        // I used stream because if I return just plane.findGeoIntersections() it doesn't work
-        // for the multicolor test and the color of triangles doesn't appear
-        return intersections.stream()
-                .map(gp -> new GeoPoint(this, gp))
-                .toList();
+        return List.of(new GeoPoint(this, point));
     }
 }

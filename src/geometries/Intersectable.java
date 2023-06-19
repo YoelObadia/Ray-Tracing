@@ -14,7 +14,7 @@ public abstract class Intersectable {
 
     /**
      * Definition of the function findIntersections()
-     * Take the parameter Ray that will search intersections
+     * @param ray the ray that will search intersections
      * The function return a list of GeoPoints that are
      * the intersections between the ray and the geometries
      */
@@ -27,13 +27,23 @@ public abstract class Intersectable {
     }
 
     /**
+     * New definition added for the step 7 about shadows and transparency
+     * @param ray the ray that will search intersections
+     * @return new definition of the function findGeoIntsersections with a new parameter
+     */
+    public final List<GeoPoint> findGeoIntsersections(Ray ray) {
+        return findGeoIntsersections(ray, Double.POSITIVE_INFINITY);
+    }
+
+    /**
      * Function findGeoIntsersections that use the function findGeoIntsersectionsHelper()
      *
      * @param ray through the geometry
+     * @param maxDistance the maximum distance we want the point to be from the starting point
      * @return list of intersections GeoPoints
      */
-    public final List<GeoPoint> findGeoIntsersections(Ray ray) {
-        return findGeoIntsersectionsHelper(ray);
+    public final List<GeoPoint> findGeoIntsersections(Ray ray, double maxDistance) {
+        return findGeoIntsersectionsHelper(ray, maxDistance);
     }
 
     ;
@@ -44,7 +54,7 @@ public abstract class Intersectable {
      * @param ray through the geometry
      * @return list of intersections GeoPoints
      */
-    protected abstract List<GeoPoint> findGeoIntsersectionsHelper(Ray ray);
+    protected abstract List<GeoPoint> findGeoIntsersectionsHelper(Ray ray, double maxDistance);
 
     /**
      * Helper internal class (PDS)
